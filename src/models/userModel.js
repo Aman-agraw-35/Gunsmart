@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    username: "SampleUser",
-    id : [integer] ,
-    Quantity : [integer]
+    username: String,
+    id : [String] ,
+    Quantity : [String]
 
 });
 
