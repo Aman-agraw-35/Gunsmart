@@ -1,8 +1,11 @@
-"use client";
+"use client"
 import React,{useState} from "react"
 import "./cart.css" 
-import Link from "next/link";
-import Image from "next/image";
+import Link from "next/link"
+import Image from "next/image"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
+
 export default function Cart (){
   const [isCart ,setIsCart] = useState(0)
   return (
@@ -36,11 +39,15 @@ export default function Cart (){
             </div>
             <div className="w-[80%] h-full py-4 px-4 text-black ">
             <h1 className="text-lg pb-4">KELTEC P50 (HOLSTER PACKAGE)</h1>
-            <h1 className="text-md font-bold pb-2">$334</h1>
             <div className="flex">
-            <button className="btn-ghost btn h-4 w-4  rounded-3xl border-black border-2">-</button>
-            <button className="btn-ghost btn  rounded-3xl border-black border-2">+</button>
-
+            <h1 className="text-lg pr-4 font-bold pb-2">$334</h1>
+            <h1 className="text-sm pt-1 font-medium line-through text-[#8f8f8f] pb-2">$394</h1>
+            </div>
+            <div className="flex">
+            <button className="btn-ghost btn btn-xs h-4 w-4 pr-5 "><FontAwesomeIcon icon={faMinus} /></button>
+            <h1 className="text-md font-bold  border-[0.1px] px-2 border-[#8f8f8f] ">1</h1>
+            <button className="btn-ghost btn-xs btn pl-4  "><FontAwesomeIcon icon={faPlus} /></button>
+            <h1 className="text-md px-4 text-[#9f9f9f] cursor-pointer hover:text-[#6f6f6f] font-semibold ">Remove</h1>
             <button></button>
             </div>
             </div>
@@ -74,7 +81,8 @@ export default function Cart (){
         </tr>
         </tbody>
         </table>
-</div>
+        </div>
+        <h1 className="text-lg bg-[#fb641b] text-center py-3 hover:cursor-pointer  font-medium text-[#fff]">PLACE ORDER</h1>
         </div>
         </div>
       </div>
