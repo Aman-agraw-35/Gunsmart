@@ -3,14 +3,13 @@ import { connect } from "@/dbconfig/dbconfig";
 import User from "@/models/userModel";
 
 let reqBody: any;
-
 connect();
 
 export async function POST(request: NextRequest) {
   try {
     reqBody = await request.json();
 
-    const userInDatabase = await User.findOne({ username: "Aman Agrawal" });
+    let userInDatabase = await User.findOne({ username: "Aman Agrawal" });
 
     if (!userInDatabase) {
       return NextResponse.json({ error: "User does not exist" }, { status: 400 });
@@ -50,4 +49,16 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+}
+
+export async function GET(request: NextRequest){
+    try{
+        const userFromDatabase = await User.findOne({ username: "Aman Agrawal" });
+        return  NextResponse.json({ message: "Data received successfully" ,
+          Quantity  : userFromDatabase.Quantity,
+          idProduct : userFromDatabase.idProduct 
+    });
+    } catch (error: any) {
+        return NextResponse.json({error: error.message}, {status: 500})
+    }
 }

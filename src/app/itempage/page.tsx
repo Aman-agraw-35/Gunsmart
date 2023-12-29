@@ -4,6 +4,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import Data from '../mainpage/Data';
 import  "../itempage/itempage.css";
+import Loader from '../helpers/loader';
 import { Quantico } from 'next/font/google'
 import { useRouter } from 'next/navigation';
 
@@ -13,6 +14,7 @@ const ParticularItem = () => {
   const [id, setId] = useState({})
   const [offPercentage , setOffPercentage] = useState("");
   const [offPrice , setOffPrice] = useState("");
+  const [isLoading, setIsLoading] = useState(1);
   const items = Data;
   const router = useRouter();
 
@@ -23,6 +25,7 @@ const ParticularItem = () => {
         const number = res.data.data
         const newwe = items[number - 1];
         setId(newwe)
+        setIsLoading(0)
         setOffPercentage(((1 - Number(newwe?.salePrice.substring(1))/Number(newwe?.retailPrice.substring(1)))*100).toFixed(2))
         setOffPrice((Number(newwe?.retailPrice.substring(1)) - Number(newwe?.salePrice.substring(1))).toFixed(2))
       } catch (err) {
@@ -36,11 +39,15 @@ const ParticularItem = () => {
   const handleClick = async (db: any) => {
     try {
       const response = await axios.post("../api/cart", db )
-      console.log(db + '  ' + response.data.data);
+      console.log(db + '  ' + response.data);
       router.push("/cart");
     } catch (error:any) {
       console.log("Process failed", error.message);
     } 
+  }
+  
+  if (isLoading) {
+    return <Loader/>;
   }
 
   return (
