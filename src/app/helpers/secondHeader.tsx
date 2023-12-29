@@ -8,7 +8,6 @@ const SecondHeader = () => {
     border-white'>
   <ul className="h-10 w-[10%] flex mr-10">
    <li className='h-full w-[50%] text-center pt-2'>
- 
    </li>
    <li className='h-full w-[50%] text-center pt-2'>aman</li>
   </ul>

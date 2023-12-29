@@ -2,7 +2,6 @@
 import React,{useEffect} from 'react';
 import Data from './Data';
 import Image from 'next/image';
-import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 

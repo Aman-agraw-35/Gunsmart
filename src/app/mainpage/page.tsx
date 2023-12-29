@@ -6,15 +6,10 @@ import { CardSection } from './cardSection';
 const page = () => {
   return (
     <div>
-  
        <Header/>
        <SecondHeader/>
        <Upper/>
        <CardSection/>
-
-
-    
-
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import { NextRequest ,NextResponse } from "next/server"
-import axios from "axios";
 var reqBody:any ;
 export async function POST(request: NextRequest){
     try {
