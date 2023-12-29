@@ -15,7 +15,7 @@ export const CardSection:any = () => {
       router.push("/itempage");
       
     } catch (error:any) {
-      console.log("Login failed", error.message);
+      console.log("Process failed", error.message);
   } 
   }
      

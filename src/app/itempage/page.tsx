@@ -5,6 +5,7 @@ import axios from 'axios';
 import Data from '../mainpage/Data';
 import  "../itempage/itempage.css";
 import { Quantico } from 'next/font/google'
+import { useRouter } from 'next/navigation';
 const inter = Quantico({   weight: '700', subsets: ['latin'] })
 
 const ParticularItem = () => {
@@ -12,18 +13,19 @@ const ParticularItem = () => {
   const [offPercentage , setOffPercentage] = useState("");
   const [offPrice , setOffPrice] = useState("");
   const items = Data ;
+  const  router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get('../api/card')
         const number = res.data.data
-         console.log(number);
+        //  console.log(number);
         const newwe =  items[number - 1] ;
-         console.log(newwe);
+        //  console.log(newwe);
         setId(newwe)
         setOffPercentage((( 1 - Number(newwe?.salePrice.substring(1))/Number(newwe?.retailPrice.substring(1)))*100).toFixed(2))
-        setOffPrice(Number(newwe?.retailPrice.substring(1)) - Number(newwe?.salePrice.substring(1)))
-       console.log(offPercentage);
+        setOffPrice((Number(newwe?.retailPrice.substring(1)) - Number(newwe?.salePrice.substring(1))).toFixed(2))
+      //  console.log(offPercentage);
        
         
       } catch (err) {
@@ -33,7 +35,20 @@ const ParticularItem = () => {
 
     fetchData();
   }, []);
-   
+
+  const handleClick =  async (db: any) =>
+  {
+    try {
+      const response = await axios.post("../api/cart", db )
+      console.log(db + '  ' + response.data.data);
+      
+      router.push("/cart");
+      
+    } catch (error:any) {
+      console.log("Process failed", error.message);
+  } 
+  }
+
   return (
     <div className='h-full w-ful '>
    <div className="flex md:flex-row flex-col md:h-[648px] h-min items-center   xl:mx-[280px]  lg:mx-24 sm:mx-16 mx-4  pt-36 pb-24">
@@ -61,8 +76,10 @@ const ParticularItem = () => {
       <br/>
       <h1 className="text-2xl pt-8 font-semibold  text-[#388e3c] ">Save ${offPrice} in this order if
       you order now. </h1>
-
-      <button className="btn btn-warning mt-8 w-48 rounded-md text-white text-xl ">ADD TO CART</button>
+      <button 
+      onClick={() => handleClick(id.id)} 
+      className="btn btn-warning mt-8 w-48 rounded-md text-white text-xl ">ADD TO CART
+      </button>
 
     </div>
    </div>
