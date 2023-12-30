@@ -1,5 +1,5 @@
 "use client"
-import React,{useState,useEffect} from "react"
+import React,{useState,useEffect, useRef} from "react"
 import "./cart.css" 
 import axios from "axios"
 import Image from "next/image"
@@ -10,46 +10,66 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
 
 export default function Cart (){
-  const [isLoading, setIsLoading] = useState(1);
-  const [isCart ,setIsCart] = useState(0)
+  const [isLoading, setIsLoading] = useState(1)
+  const [saleTotal ,setSaleTotal] = useState("0")
+  const [retailTotal ,setRetailTotal] = useState("0")
   const [dataFromCart, setDataFromCart] = useState([])
-  useEffect(() => {
+
+  
     const fetchData = async () => {
       try {
         const res = await axios.get('../api/cart')
         console.log(res.data)
-        setDataFromCart(res.data)
+        setDataFromCart(res.data.data)
+        setSaleTotal((res.data.salePriceTotal))
+        setRetailTotal(res.data.retailPriceTotal)
         setIsLoading(0);
       } catch (err) {
         console.log(err);
       }
     };
+ 
+  
+  const handlePlusClick = (async (db: any) => {
+    try {
+      const response = await axios.post("../api/cartPlus",  {plus:db})
+      console.log(db + '  ' + response.data);
+      fetchData();
+    } catch (error:any) {
+      console.log("Process failed", error.message);
+    } 
+  })
+  
+  const handleMinusClick = (async (db: any) => {
+    try {
+      const response = await axios.post("../api/cartMinus",  {minus:db})
+      console.log(db + '  ' + response.data);
+      fetchData();
+    } catch (error:any) {
+      console.log("Process failed", error.message);
+    } 
+  })
+    useEffect(() => {
     fetchData();
   }, []);
+
   if (isLoading) {
     return <Loader/>;
   }
-  if (!dataFromCart || !dataFromCart.idProduct || dataFromCart.idProduct.length === 0) {
+  if (!dataFromCart ||  dataFromCart.length === 0) {
     return <EmptyCard />;
   }
-  if (dataFromCart && dataFromCart.idProduct) {
-    var sortedData = dataFromCart.idProduct.map((cardId:any , index) => {
-      const item = Data.find((item) => item.id == cardId);
-      const quantity = dataFromCart.Quantity[index] || 0;
-      return { ...item, quantity };    })
-    console.log(sortedData);
-  }
-  
+
   return (
     <>
       <div className="bg-[#e4e4e4] w-full h-[max] flex "> 
         <div className="w-[70%] pl-36 pt-8 mr-4 ">
-          <div className="h-48 bg-white p-8 border-b-[0.001px] border-[#8f8f8f] ">
-            <h1 className="text-3xl text-black border-b-[1px] border-black pb-8 ">Shopping Cart</h1>
-            <h1 className="text-xl pt-2 text-black float-right  ">1 item</h1>
+          <div className="h-44 bg-white p-6 border-b-[0.001px] border-[#8f8f8f] ">
+            <h1 className="text-4xl text-[#287480] font-semibold border-b-[1px] border-black pb-5 ">Shopping Cart</h1>
+            <h1 className="text-xl pt-2 text-black float-right  ">{dataFromCart.length}&nbsp;{dataFromCart.length == 1 ? "Item":"Items"}</h1>
           </div>
-          {sortedData?.map( (cartItem:any) => (
-          <div key={cartItem.id} className="h-48 bg-white p-8 border-b-[0.001px] border-[#8f8f8f] flex ">
+          {dataFromCart?.map( (cartItem:any) => (
+          <div key={cartItem.id} className="h-44 bg-white p-6 border-b-[0.001px] border-[#8f8f8f] flex ">
             <div className="h-full w-[17%]  ">
             <Image 
             src={cartItem.image}
@@ -66,11 +86,16 @@ export default function Cart (){
             <h1 className="text-sm pt-1 font-medium line-through text-[#8f8f8f] pb-2">{cartItem.retailPrice}</h1>
             </div>
             <div className="flex">
-            <button className="btn-ghost btn btn-xs h-4 w-4 pr-5 "><FontAwesomeIcon icon={faMinus} /></button>
+            {<button 
+            onClick={() =>{handleMinusClick(cartItem.id)}}  
+            className="btn-ghost btn btn-xs h-4 w-4 pr-5 "><FontAwesomeIcon icon={faMinus} />
+            </button> }
             <h1 className="text-md font-bold  border-[0.1px] px-2 border-[#8f8f8f] ">{cartItem.quantity}</h1>
-            <button className="btn-ghost btn-xs btn pl-4  "><FontAwesomeIcon icon={faPlus} /></button>
+            <button
+            onClick={() =>{handlePlusClick(cartItem.id)}}  
+            className="btn-ghost btn-xs btn pl-4 "><FontAwesomeIcon icon={faPlus} />
+            </button>
             <h1 className="text-md px-4 text-[#9f9f9f] cursor-pointer hover:text-[#6f6f6f] font-semibold ">Remove</h1>
-            <button></button>
             </div>
             </div>
           </div>))}
@@ -86,19 +111,19 @@ export default function Cart (){
         <tbody>
         <tr >
          <td>Price</td>
-         <td>$2222</td>
+         <td>${retailTotal}</td>
         </tr>
         <tr>
          <td>Discount</td>
-         <td>$233</td>
+         <td className="text-[#388e3c]">-${(Number(retailTotal) - Number(saleTotal)).toFixed(2)}</td>
         </tr>
         <tr className='border-b-[1px] border-black border-dashed'>      
          <td>Delivery Charges</td>
-         <td>$10</td>
+         <td className=" text-[#388e3c]"><span className="line-through text-black">$10</span>&nbsp;&nbsp;Free</td>
         </tr>
         <tr className='text-bold text-lg '>      
          <td>Total Amount</td>
-         <td>$1000</td>
+         <td>${saleTotal}</td>
         </tr>
         </tbody>
         </table>
