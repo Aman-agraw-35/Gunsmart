@@ -42,8 +42,17 @@ export default function Cart (){
   
   const handleMinusClick = (async (db: any) => {
     try {
-      const response = await axios.post("../api/cartMinus",  {minus:db})
+      const response = await axios.post("../api/cartMinus",  {minus:db });
       console.log(db + '  ' + response.data);
+      fetchData();
+    } catch (error:any) {
+      console.log("Process failed", error.message);
+    } 
+  })
+  const handleRemoveClick = (async (d: any) => {
+    try {
+      const response = await axios.post("../api/cartMinus",  {remove : d});
+      console.log(d + '  ' + response.data);
       fetchData();
     } catch (error:any) {
       console.log("Process failed", error.message);
@@ -88,14 +97,16 @@ export default function Cart (){
             <div className="flex">
             {<button 
             onClick={() =>{handleMinusClick(cartItem.id)}}  
-            className="btn-ghost btn btn-xs h-4 w-4 pr-5 "><FontAwesomeIcon icon={faMinus} />
+            className="btn-ghost  btn-xs h-4 w-4 pr-5 "><FontAwesomeIcon icon={faMinus} />
             </button> }
             <h1 className="text-md font-bold  border-[0.1px] px-2 border-[#8f8f8f] ">{cartItem.quantity}</h1>
             <button
             onClick={() =>{handlePlusClick(cartItem.id)}}  
-            className="btn-ghost btn-xs btn pl-4 "><FontAwesomeIcon icon={faPlus} />
+            className="btn-ghost btn-xs  pl-4 "><FontAwesomeIcon icon={faPlus} />
             </button>
-            <h1 className="text-md px-4 text-[#9f9f9f] cursor-pointer hover:text-[#6f6f6f] font-semibold ">Remove</h1>
+            <h1 
+            onClick={() =>{handleRemoveClick(cartItem.id)}}  
+            className="text-md px-4 text-[#9f9f9f] cursor-pointer hover:text-[#6f6f6f] font-semibold ">Remove</h1>
             </div>
             </div>
           </div>))}

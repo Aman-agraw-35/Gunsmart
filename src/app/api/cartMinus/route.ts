@@ -12,8 +12,8 @@ export async function POST(request: NextRequest){
         return NextResponse.json({ error: "User does not exist" }, { status: 400 });
       }
       
-      let indexingMinus: any;
-
+      let indexingMinus: any;      
+      if(reqBody.minus){
       userInDatabase.idProduct.forEach((element: any, index: any) => {
         if (element == reqBody.minus) {
           indexingMinus = index;
@@ -43,7 +43,35 @@ export async function POST(request: NextRequest){
       return NextResponse.json({
         message: "we subtracted Quantity",
       });
+      }
 
+      let indexingRemove: any;
+      if(reqBody.remove){
+        userInDatabase.idProduct.forEach((element: any, index: any) => {
+          if (element == reqBody.remove) {
+            indexingRemove = index;
+          }
+        });
+          await User.findOneAndUpdate({ username: "Aman Agrawal" },
+            {
+              $unset: {
+                [`idProduct.${indexingRemove}`]: 1,
+                [`Quantity.${indexingRemove}`]: 1,
+              },
+            }
+          );
+          await User.findOneAndUpdate(
+            { username: "Aman Agrawal" },
+            {
+              $pull: { idProduct: null, Quantity: null },
+            }
+          )
+      
+        return NextResponse.json({
+          message: "we subtracted Quantity",
+        });
+        }
+      
     } catch (error: any) {
         return NextResponse.json({error: error.message}, {status: 500})
     }
