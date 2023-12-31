@@ -71,24 +71,24 @@ export default function Cart (){
 
   return (
     <>
-      <div className="bg-[#e4e4e4] w-full h-[max] flex "> 
-        <div className="w-[70%] pl-36 pt-8 mr-4 ">
+      <div className="bg-[#e4e4e4] w-full h-[max] flex xl:px-32 lg:px-6 lg:items-start items-center lg:flex-row flex-col-reverse"> 
+        <div className="md:w-[70%] w-[90%] ml-4 py-8 mr-4 ">
           <div className="h-44 bg-white p-6 border-b-[0.001px] border-[#8f8f8f] ">
             <h1 className="text-4xl text-[#287480] font-semibold border-b-[1px] border-black pb-5 ">Shopping Cart</h1>
             <h1 className="text-xl pt-2 text-black float-right  ">{dataFromCart.length}&nbsp;{dataFromCart.length == 1 ? "Item":"Items"}</h1>
           </div>
           {dataFromCart?.map( (cartItem:any) => (
-          <div key={cartItem.id} className="h-44 bg-white p-6 border-b-[0.001px] border-[#8f8f8f] flex ">
-            <div className="h-full w-[17%]  ">
+          <div key={cartItem.id} className="h-44 bg-white lg:p-6 pl-1 py-6 pr-2  border-b-[0.001px] border-[#8f8f8f] flex ">
+            <div className="h-full lg:w-[17%] w-[33%]  ">
             <Image 
             src={cartItem.image}
             alt={cartItem.name}
             width={460}
             height={460}
-            className='object-contain md:h-full w-full bg-[#ffffff] '
+            className='object-contain object-center h-full w-full  bg-[#ffffff] '
             />
             </div>
-            <div className="w-[80%] h-full py-4 px-4 text-black ">
+            <div className="md:w-[80%] w-[70%] h-full md:py-4  md:px-4 pr-2 pl-4 text-black ">
             <h1 className="text-lg font-semibold pb-4">{cartItem.name}</h1>
             <div className="flex">
             <h1 className="text-lg pr-4 font-bold pb-2">{cartItem.salePrice}</h1>
@@ -112,7 +112,7 @@ export default function Cart (){
           </div>))}
         </div>
 
-        <div className="w-[30%] pt-8 mr-4 pr-36 ">
+        <div className="lg:w-[30%] md:w-[70%] w-[90%] pt-8 pb-8   ">
         <div className="h-60 bg-white   ">
           <div className="border-b-[0.1px] border-[#8f8f8f] p-3">
         <h1 className="text-lg  font-medium text-[#8f8f8f]">PRICE DETAILS</h1>
@@ -122,7 +122,7 @@ export default function Cart (){
         <tbody>
         <tr >
          <td>Price</td>
-         <td>${retailTotal}</td>
+         <td>&nbsp;${retailTotal}</td>
         </tr>
         <tr>
          <td>Discount</td>
@@ -130,11 +130,11 @@ export default function Cart (){
         </tr>
         <tr className='border-b-[1px] border-black border-dashed'>      
          <td>Delivery Charges</td>
-         <td className=" text-[#388e3c]"><span className="line-through text-black">$10</span>&nbsp;&nbsp;Free</td>
+         <td className=" text-[#388e3c]"><span className="line-through text-black">&nbsp;$10&nbsp;</span>&nbsp;&nbsp;Free</td>
         </tr>
-        <tr className='text-bold text-lg '>      
+        <tr className='font-bold  xl:text-lg lg:text-md '>      
          <td>Total Amount</td>
-         <td>${saleTotal}</td>
+         <td>&nbsp;${saleTotal}</td>
         </tr>
         </tbody>
         </table>
