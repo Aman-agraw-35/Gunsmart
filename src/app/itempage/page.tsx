@@ -1,5 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react';
+import Header from '../helpers/header';
 import Image from 'next/image';
 import axios from 'axios';
 import Data from '../mainpage/Data';
@@ -52,6 +53,7 @@ const ParticularItem = () => {
 
   return (
     <div className='h-full w-full '>
+      <Header/>
       <div className="flex md:flex-row flex-col md:h-[648px] h-min items-center xl:mx-[280px] lg:mx-24 sm:mx-16 mx-4 pt-36 pb-24">
         <div className="md:w-[50%] w-[90%] md:h-full bg-[#ffffff] image">
           <Image 

@@ -1,17 +1,47 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react';
+import Image from 'next/image';
+import { Rubik_Spray_Paint } from 'next/font/google';
+
+const roboto = Rubik_Spray_Paint({
+  weight: '400',
+  subsets: ['latin'],
+});
 
 const Header = () => {
-  return (
-    <div className='h-20 w-full border-b-2 justify-center flex items-center border-white'>
-   <ul className="h-10 w-[40%] flex">
-    <li className='h-full w-[25%] text-center pt-2'>aman</li>
-    <li className='h-full w-[25%] text-center pt-2'>aman</li>
-    <li className='h-full w-[25%] text-center pt-2'>aman</li>
-    <li className='h-full w-[25%] text-center pt-2'>aman</li>
-   </ul>
+  const [isProfileCardVisible, setProfileCardVisible] = useState(false);
 
+  const toggleProfileCard = () => {
+    setProfileCardVisible(!isProfileCardVisible);
+  };
+
+  return (
+    <div className="fixed top-0 w-full bg-black border-b-2 justify-center flex items-center border-white z-50 h-20">
+      <div className="flex h-10 bg-black w-[90%]">
+        <div className={roboto.className}>
+          <h1 className="bg-black text-4xl sm:text-5xl pt-1 h-full float-left w-max">Guns-Mart</h1>
+        </div>
+        <div
+          className="ml-auto w-[43px] bg-black h-[43px] relative cursor-pointer"
+          onClick={toggleProfileCard}
+        >
+          <Image
+            className="w-[55px] bg-black h-[55px] pb-2 object-cover rounded-full"
+            src="/images/profile.png" // Replace with your actual image path or URL
+            width={50}
+            height={50}
+            alt="Profile"
+          />
+          {isProfileCardVisible && (
+            <div className="absolute bg-white top-full right-[-15px] mt-5 w-max bg-white p-4 rounded-md shadow-md">
+              <h2 className="text-2xl bg-white font-semibold  text-black ">Demo Profile</h2>
+              <h2 className="text-xl bg-white font-medium mb-2 text-black ">username: Aman Agrawal</h2>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default Header;

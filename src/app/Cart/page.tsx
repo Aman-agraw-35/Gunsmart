@@ -3,6 +3,7 @@ import React,{useState,useEffect, useRef} from "react"
 import "./cart.css" 
 import axios from "axios"
 import Image from "next/image"
+import Header from "../helpers/header"
 import EmptyCard from "./emptyCard"
 import Data from '../mainpage/Data';
 import Loader from "../helpers/loader"
@@ -71,7 +72,8 @@ export default function Cart (){
 
   return (
     <>
-      <div className="bg-[#e4e4e4] w-full h-[max] flex xl:px-32 lg:px-6 lg:items-start items-center lg:flex-row flex-col-reverse"> 
+      <Header/>
+      <div className="bg-[#e4e4e4] w-full h-[max] pt-20 flex xl:px-32 lg:px-6 lg:items-start items-center lg:flex-row flex-col-reverse"> 
         <div className="md:w-[70%] w-[90%] ml-4 py-8 mr-4 ">
           <div className="h-44 bg-white p-6 border-b-[0.001px] border-[#8f8f8f] ">
             <h1 className="text-4xl text-[#287480] font-semibold border-b-[1px] border-black pb-5 ">Shopping Cart</h1>
