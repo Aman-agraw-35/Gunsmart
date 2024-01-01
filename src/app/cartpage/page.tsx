@@ -72,7 +72,7 @@ import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
   return (
     <>
       <Header/>
-      <div className="bg-[#e4e4e4] w-full h-[max] pt-20 flex xl:px-32 lg:px-6 lg:items-start items-center lg:flex-row flex-col-reverse"> 
+      <div className="bg-[#e4e4e4]  w-full h-[max] pt-20 flex xl:px-32 lg:px-6 lg:items-start items-center lg:flex-row flex-col-reverse"> 
         <div className="md:w-[70%] w-[90%] ml-4 py-8 mr-4 ">
           <div className="h-44 bg-white p-6 border-b-[0.001px] border-[#8f8f8f] ">
             <h1 className="text-4xl bg-white text-[#287480] font-semibold border-b-[1px] border-black pb-5 ">Shopping Cart</h1>
@@ -113,7 +113,7 @@ import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
           </div>))}
         </div>
 
-        <div className="lg:w-[30%] md:w-[70%] w-[90%] pt-8 pb-8  ">
+        <div className="lg:w-[30%] md:w-[70%] w-[90%] pt-8 pb-8 mb-4 ">
         <div className="h-60 bg-white   ">
           <div className="border-b-[0.1px] border-[#8f8f8f] bg-white  p-3">
         <h1 className="text-lg bg-white  font-medium text-[#8f8f8f]">PRICE DETAILS</h1>
