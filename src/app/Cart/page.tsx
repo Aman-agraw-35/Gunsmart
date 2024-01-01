@@ -5,7 +5,6 @@ import axios from "axios"
 import Image from "next/image"
 import Header from "../helpers/header"
 import EmptyCard from "./emptyCard"
-import Data from '../mainpage/Data';
 import Loader from "../helpers/loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
