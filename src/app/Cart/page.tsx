@@ -9,7 +9,7 @@ import Loader from "../../helpers/loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
 
-export default function Cart (){
+export default function cart (){
   const [isLoading, setIsLoading] = useState(1)
   const [saleTotal ,setSaleTotal] = useState("0")
   const [retailTotal ,setRetailTotal] = useState("0")
