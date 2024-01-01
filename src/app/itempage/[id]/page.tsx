@@ -62,7 +62,7 @@ const ParticularItem = ({params}:any) => {
     try {
       const response = await axios.post("../api/cart", db )
       console.log(db + '  ' + response.data);
-      router.push("/cart");
+      router.push("/cartpage");
     } catch (error:any) {
       console.log("Process failed", error.message);
     } 

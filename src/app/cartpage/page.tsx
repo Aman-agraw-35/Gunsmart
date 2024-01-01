@@ -1,5 +1,5 @@
 "use client"
-import React,{useState,useEffect, useRef} from "react"
+import React,{useState,useEffect} from "react"
 import "./cart.css" 
 import axios from "axios"
 import Image from "next/image"
@@ -9,7 +9,7 @@ import Loader from "../../helpers/loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
 
-export default function cart (){
+    const Cartpage = () => {
   const [isLoading, setIsLoading] = useState(1)
   const [saleTotal ,setSaleTotal] = useState("0")
   const [retailTotal ,setRetailTotal] = useState("0")
@@ -148,3 +148,4 @@ export default function cart (){
   )
 
 };
+export default Cartpage ;
