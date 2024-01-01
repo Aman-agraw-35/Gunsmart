@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from "next/link"
-import Header from '../helpers/header'
+import Header from '../../helpers/header'
 const EmptyCard = () => {
   return (
     <>

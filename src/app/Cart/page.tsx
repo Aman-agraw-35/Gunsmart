@@ -3,9 +3,9 @@ import React,{useState,useEffect, useRef} from "react"
 import "./cart.css" 
 import axios from "axios"
 import Image from "next/image"
-import Header from "../helpers/header"
+import Header from "../../helpers/header"
 import EmptyCard from "./emptyCard"
-import Loader from "../helpers/loader"
+import Loader from "../../helpers/loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
 

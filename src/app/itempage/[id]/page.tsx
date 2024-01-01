@@ -1,11 +1,11 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import Header from '@/app/helpers/header';
+import Header from '@/helpers/header';
 import Image from 'next/image';
 import axios from 'axios';
 import Data from '@/app/mainpage/Data';
 import  "../itempage.css";
-import Loader from '@/app/helpers/loader';
+import Loader from '@/helpers/loader';
 import { Quantico } from 'next/font/google'
 import { useRouter } from 'next/navigation';
 
