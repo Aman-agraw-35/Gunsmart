@@ -19,7 +19,7 @@ export const CardSection:any = () => {
   }
      
   return (
-    <div className="h-auto w-full flex md:py-32 py-0 xl:px-32 px-4 gap-6 justify-center flex-wrap ">
+    <div className="h-auto bg-black w-full flex md:py-32 py-0 xl:px-32 px-4 gap-6 justify-center flex-wrap ">
       {Data?.slice(0,6).map((x) => (
         <div key={x.id} onClick={() => handleClick(x.id)} className="w-[400px] h-[393px]
         hover:cursor-pointer bg-white border-white border-[1px] 
