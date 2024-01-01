@@ -3,9 +3,9 @@ import Image from 'next/image';
 
 const Upper = () => {
   return (
-    <div className='w-full h-[30rem] align-middle pt-20'>
+    <div className='w-full h-[30rem] align-middle pt-20 z-[-20] '>
     <Image 
-    className="absolute opacity-60 w-full md:h-[500px] h-[320px] object-cover " 
+    className="absolute opacity-60  w-full md:h-[500px] h-[320px] object-cover " 
     src="/images/gun.jpg" 
     width={1530}
     height={600} alt='img'/>
