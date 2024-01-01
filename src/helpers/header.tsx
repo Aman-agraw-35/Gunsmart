@@ -22,12 +22,12 @@ const Header = () => {
           <h1 className="bg-black text-4xl sm:text-5xl pt-1 h-full float-left w-max">Guns-Mart</h1>
         </div>
         <div
-          className="ml-auto w-[43px] bg-black h-[43px] relative cursor-pointer"
+          className="ml-auto w-[43px] bg-black h-[43px] float-right relative cursor-pointer"
           onClick={toggleProfileCard}
         >
           <Image
             className="w-[55px] bg-black h-[55px] pb-2 object-cover rounded-full"
-            src="/images/profile.png" // Replace with your actual image path or URL
+            src="/images/profile.png" 
             width={50}
             height={50}
             alt="Profile"
