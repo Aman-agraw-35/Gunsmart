@@ -10,9 +10,20 @@ import { Quantico } from 'next/font/google'
 import { useRouter } from 'next/navigation';
 
 const inter = Quantico({ weight: '700', subsets: ['latin'] })
+interface Item{
+    id: number;
+    name: string;
+    image: string;
+    retailPrice: string;
+    salePrice: string;
+    caliber: string;
+    capacity: string;
+    weight: string;
+    specs: string;
+}
 
 const ParticularItem = ({params}:any) => {
-  const [id, setId] = useState({})
+  const [id, setId] = useState<Item>()
   const [offPercentage , setOffPercentage] = useState("");
   const [offPrice , setOffPrice] = useState("");
   const [isLoading, setIsLoading] = useState(1);
@@ -66,19 +77,19 @@ const ParticularItem = ({params}:any) => {
         </div>
         <div className="md:w-[50%] w-[90%] h-full mt-8 md:mt-0 md:ml-6  ">
           <div className={inter.className}>
-            <h1 className="text-4xl sm:text-5xl font-bold text-black pt-4 ">{id.name}</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold text-black  ">{id.name}</h1>
           </div>
-          <div className="flex pt-4">
-            <h1 className="text-3xl pt-8 font-bold text-[#b5865d] ">{id.salePrice}</h1>
-            <h1 className="text-xl pt-9 pl-2 font-semibold line-through font-sans text-[#b5865d] ">{id.retailPrice}</h1>
-            <h1 className="text-lg pt-9 pl-3 font-bold text-[#388e3c] ">{offPercentage}%&nbsp;off</h1>
+          <div className="flex ">
+            <h1 className="text-3xl pt-6 font-bold text-[#b5865d] ">{id.salePrice}</h1>
+            <h1 className="text-xl pt-7 pl-2 font-semibold line-through font-sans text-[#b5865d] ">{id.retailPrice}</h1>
+            <h1 className="text-lg pt-7 pl-3 font-bold text-[#388e3c] ">{offPercentage}%&nbsp;off</h1>
           </div>
-          <label className="font-bold mt-4 text-[#388e3c] " htmlFor="h1">Special Sale Price</label>
+          <label className="font-bold m text-[#388e3c] " htmlFor="h1">Special Sale Price</label>
           <br/>
-          <h1 className="text-2xl pt-8 font-semibold text-[#388e3c] ">Save ${offPrice} in this order if you order now. </h1>
+          <h1 className="text-2xl pt-4 font-semibold text-[#388e3c] ">Save ${offPrice} in this order if you order now. </h1>
           <button 
             onClick={() => handleClick(id.id)} 
-            className="btn btn-warning mt-8 w-48 rounded-md text-white text-xl "
+            className="btn btn-warning mt-4 w-48 rounded-md text-white text-xl "
           >
             ADD TO CART
           </button>

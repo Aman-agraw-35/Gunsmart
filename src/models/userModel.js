@@ -4,7 +4,6 @@ const userSchema = new mongoose.Schema({
     username: String,
     idProduct : [String] ,
     Quantity : [String]
-
 });
 
 
