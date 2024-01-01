@@ -33,7 +33,7 @@ const Header = () => {
             alt="Profile"
           />
           {isProfileCardVisible && (
-            <div className="absolute bg-white top-full right-[-15px] mt-5 w-max bg-white p-4 rounded-md shadow-md">
+            <div className="absolute top-full right-[-15px] mt-5 w-max bg-white p-4 rounded-md shadow-md">
               <h2 className="text-2xl bg-white font-semibold  text-black ">Demo Profile</h2>
               <h2 className="text-xl bg-white font-medium mb-2 text-black ">username: Aman Agrawal</h2>
             </div>

@@ -23,7 +23,17 @@ interface Item{
 }
 
 const ParticularItem = ({params}:any) => {
-  const [id, setId] = useState<Item>()
+  const [id, setId] = useState<Item>({
+    id: params.id,
+    name: "",
+    image: "",
+    retailPrice:"",
+    salePrice: "",
+    caliber: "",
+    capacity:"",
+    weight: "",
+    specs: "",
+  })
   const [offPercentage , setOffPercentage] = useState("");
   const [offPrice , setOffPrice] = useState("");
   const [isLoading, setIsLoading] = useState(1);
@@ -46,7 +56,7 @@ const ParticularItem = ({params}:any) => {
     };
 
     fetchData();
-  }, []);
+  },);
 
   const handleClick = async (db: any) => {
     try {
