@@ -1,6 +1,6 @@
 # Guns-Mart - Next.js Guns Shopping App
 
-Guns-Mart is a modern guns shopping app built with Next.js, React, and other technologies. It provides users with a seamless shopping experience for purchasing firearms and related accessories.
+Guns-Mart is a modern guns shopping app built with Next.js, React, and other technologies. It provides users with a seamless shopping experience for purchasing firearms.
 
 ## Made by Aman Agrawal(Student at IIIT BHOPAL)
 ## [My Resume](https://drive.google.com/file/d/1_y9l9mNPAc9FSRJRVhk0IGgXM_N8YzXR/view?usp=drive_link)
