@@ -11,7 +11,7 @@ export const CardSection:any = () => {
   {
     try {
       const response = await axios.post("../api/card", d )
-      router.push("/itempage");
+      router.push(`/itempage/${d}`);
       
     } catch (error:any) {
       console.log("Process failed", error.message);

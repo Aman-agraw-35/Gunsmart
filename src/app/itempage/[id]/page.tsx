@@ -4,14 +4,14 @@ import Header from '@/app/helpers/header';
 import Image from 'next/image';
 import axios from 'axios';
 import Data from '@/app/mainpage/Data';
-import  "../itempage/itempage.css";
+import  "../itempage.css";
 import Loader from '@/app/helpers/loader';
 import { Quantico } from 'next/font/google'
 import { useRouter } from 'next/navigation';
 
 const inter = Quantico({ weight: '700', subsets: ['latin'] })
 
-const ParticularItem = () => {
+const ParticularItem = ({params}:any) => {
   const [id, setId] = useState({})
   const [offPercentage , setOffPercentage] = useState("");
   const [offPrice , setOffPrice] = useState("");
@@ -77,7 +77,7 @@ const ParticularItem = () => {
           <br/>
           <h1 className="text-2xl pt-8 font-semibold text-[#388e3c] ">Save ${offPrice} in this order if you order now. </h1>
           <button 
-            onClick={() => handleClick(params.id)} 
+            onClick={() => handleClick(id.id)} 
             className="btn btn-warning mt-8 w-48 rounded-md text-white text-xl "
           >
             ADD TO CART
