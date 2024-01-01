@@ -30,8 +30,8 @@ export const CardSection:any = () => {
             alt ={x.name}
             width={350}
             height={280}
-            className="w-[350px] h-[299px] object-fill bg-center "        />
-          <div className="flex flex-row">
+            className="w-[350px] h-[299px] object-fill bg-center  bg-white "        />
+          <div className="flex  bg-white  flex-row">
           <h1 
           className='text-2xl bg-black pl-4 p-2 text-[#b5865d] font-bold '>
           {x.salePrice}

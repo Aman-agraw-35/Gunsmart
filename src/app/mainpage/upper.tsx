@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const Upper = () => {
   return (
-    <div className='w-full h-[30rem] align-middle pt-20 z-[-20] '>
+    <div className='w-full h-[30rem] bg-black align-middle pt-20 z-[-20] '>
     <Image 
     className="absolute opacity-60  w-full md:h-[500px] h-[320px] object-cover " 
     src="/images/gun.jpg" 
