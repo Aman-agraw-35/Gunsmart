@@ -8,12 +8,14 @@ import EmptyCard from "./emptyCard"
 import Loader from "../../helpers/loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
+import { useRouter } from 'next/navigation';
 
     const Cartpage = () => {
   const [isLoading, setIsLoading] = useState(1)
   const [saleTotal ,setSaleTotal] = useState("0")
   const [retailTotal ,setRetailTotal] = useState("0")
   const [dataFromCart, setDataFromCart] = useState([])
+  const router = useRouter();
 
   
     const fetchData = async () => {
@@ -28,8 +30,17 @@ import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
         console.log(err);
       }
     };
- 
-  
+
+
+
+    const handlePayment = () => {
+      try {
+        router.push(`/checkout?saleTotal=${saleTotal}`);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    
   const handlePlusClick = (async (db: any) => {
     try {
       const response = await axios.post("../api/cartPlus",  {plus:db})
@@ -68,6 +79,9 @@ import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
   if (!dataFromCart ||  dataFromCart.length === 0) {
     return <EmptyCard />;
   }
+
+
+
 
   return (
     <>
@@ -140,12 +154,14 @@ import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
         </tbody>
         </table>
         </div>
-        <h1 onClick={() =>alert("Buying guns online in India  is a crime. Thanks for visiting my site. Hope you liked my work.")} className="text-lg bg-[#fb641b] text-center py-3 hover:cursor-pointer  font-medium text-[#fff]">PLACE ORDER</h1>
+        <h1
+         onClick={() => handlePayment()}
+         className="text-lg bg-[#fb641b] text-center py-3 hover:cursor-pointer  font-medium text-[#fff]">PLACE ORDER</h1>
         </div>
         </div>
       </div>
       </>
-  )
+  )}
+    
 
-};
 export default Cartpage ;
