@@ -27,7 +27,7 @@ export default function Home() {
     return <Loader/>
   }
   return (
-    <main className="max-w-5xl mx-auto p-10 text-white text-center border m-10 rounded-md bg-[#b5865d]">
+    <main className="w-full h-[100vh]  px-60 py-40 text-white text-center border  rounded-md bg-[#b5865d]">
       <div className="mb-10 bg-[#b5865d]">
         <h1 className="text-4xl font-extrabold mb-2 bg-[#b5865d] ">Gunsmart</h1>
         <h2 className="text-2xl bg-[#b5865d]">
