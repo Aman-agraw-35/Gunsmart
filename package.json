@@ -16,6 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@stripe/react-stripe-js": "^2.7.3",
     "@stripe/stripe-js": "^4.1.0",
+    "anchor-pki": "^0.3.2",
     "axios": "^1.6.2",
     "mongoose": "^8.0.3",
     "next": "14.0.4",

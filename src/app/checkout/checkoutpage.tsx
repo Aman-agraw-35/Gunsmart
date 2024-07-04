@@ -47,7 +47,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `https://gunmart.vercel.app/payment-success?amount=${amount}`,
+        return_url: `http://www.localhost:3000/payment-success?amount=${amount}`,
       },
     });
 
@@ -55,8 +55,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
 
       setErrorMessage(error.message);
     } else {
-      // The payment UI automatically closes with a success animation.
-      // Your customer is redirected to your `return_url`.
+  
     }
 
     setLoading(false);
