@@ -30,7 +30,7 @@ export default function Home() {
         <h1 className="text-4xl font-extrabold mb-2 bg-[#b5865d] ">Gunsmart</h1>
         <h2 className="text-2xl bg-[#b5865d]">
           has requested
-          <span className="font-bold  "> ${amount}</span>
+          <span className="font-bold  bg-[#b5865d] "> ${amount}</span>
         </h2>
       </div>
 
