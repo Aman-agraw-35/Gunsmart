@@ -1,5 +1,5 @@
 "use client";
-
+import Loader from "@/helpers/loader";
 import React, { useState, useEffect } from "react";
 import CheckoutPage from "@/app/checkout/checkoutpage";
 import convertToSubcurrency from "@/helpers/convertToSubcurrency";
@@ -23,7 +23,9 @@ export default function Home() {
       setAmount(Number(saleTotal));
     }
   }, []);
-
+  if(!amount){
+    return <Loader/>
+  }
   return (
     <main className="max-w-5xl mx-auto p-10 text-white text-center border m-10 rounded-md bg-[#b5865d]">
       <div className="mb-10 bg-[#b5865d]">
