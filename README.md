@@ -31,7 +31,7 @@ Explore the Guns-Mart app by visiting [https://gunmart.vercel.app/mainpage](http
 - **Mainpage:** Browse through the sample collection of guns.
 - **Itempage:** View detailed information about a specific item.
 - **Cartpage:** Manage your shopping cart and proceed to checkout.
-- **Checkout**  Checkout and Pay with card or Paypal.
+- **Checkout:**  Checkout and Pay with card or Paypal.
 
 ## Project Structure
 
