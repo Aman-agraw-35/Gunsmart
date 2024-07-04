@@ -25,12 +25,12 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="max-w-6xl mx-auto p-10 text-white text-center border m-10 rounded-md bg-[#b5865d]">
-      <div className="mb-10">
-        <h1 className="text-4xl font-extrabold mb-2">Gunsmart</h1>
-        <h2 className="text-2xl">
+    <main className="max-w-5xl mx-auto p-10 text-white text-center border m-10 rounded-md bg-[#b5865d]">
+      <div className="mb-10 bg-[#b5865d]">
+        <h1 className="text-4xl font-extrabold mb-2 bg-[#b5865d] ">Gunsmart</h1>
+        <h2 className="text-2xl bg-[#b5865d]">
           has requested
-          <span className="font-bold"> ${amount}</span>
+          <span className="font-bold  "> ${amount}</span>
         </h2>
       </div>
 
