@@ -8,8 +8,8 @@ Guns-Mart is a modern guns shopping app built with Next.js, React, and other tec
 - Add items to the shopping cart.
 - Increase, decrease and remove items from the cart.
 - Responsive design for a great user experience on various devices.
-- Used Demo profile named "Aman Agrawal"
-
+- Used Demo profile named "Aman Agrawal".
+- Implemented payment gateway with "Stripe".
 ## Technologies Used
 
 - Next.js
@@ -31,6 +31,7 @@ Explore the Guns-Mart app by visiting [https://gunmart.vercel.app/mainpage](http
 - **Mainpage:** Browse through the sample collection of guns.
 - **Itempage:** View detailed information about a specific item.
 - **Cartpage:** Manage your shopping cart and proceed to checkout.
+- **Checkout**  Checkout and Pay with card or Paypal.
 
 ## Project Structure
 
@@ -41,8 +42,6 @@ Explore the Guns-Mart app by visiting [https://gunmart.vercel.app/mainpage](http
 - `api/`: Serverless API functions.
 - `models/`: Contains Mongoose model on which the cart works.
 
- ## Open-source Work
- - Make login and signup page.
- - I will merge the work to another branch if I liked the authentication part.
+
 
 
