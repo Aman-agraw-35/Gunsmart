@@ -4,7 +4,7 @@ export default function PaymentSuccess({
     searchParams: { amount: string };
   }) {
     return (
-      <main className="w-full h-[100vh] py-40 px-60 text-white text-center border  rounded-md bg-[#b5865d]">
+      <main className="w-full h-[100vh] px-[10%] py-[5%] text-white text-center border  rounded-md bg-[#b5865d]">
         <div className="mb-10">
           <h1 className="text-4xl font-extrabold mb-2">Thank you!</h1>
           <h2 className="text-2xl">You successfully paid</h2>
