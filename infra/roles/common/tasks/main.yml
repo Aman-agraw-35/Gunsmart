@@ -1,0 +1,8 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install dependencies
+  apt:
+    name: [git, curl, unzip]
+    state: present
