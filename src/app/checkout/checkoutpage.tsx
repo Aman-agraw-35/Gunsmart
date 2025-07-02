@@ -43,13 +43,21 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       return;
     }
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      clientSecret,
-      confirmParams: {
-        return_url: `https://gunmart.vercel.app/payment-success?amount=${amount}`,
-      },
-    });
+   const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+
+const returnUrl = `${
+  isLocalhost
+    ? 'http://localhost:3000'
+    : 'https://gunmart.vercel.app'
+}/payment-success?amount=${amount}`;
+
+const { error } = await stripe.confirmPayment({
+  elements,
+  clientSecret,
+  confirmParams: {
+    return_url: returnUrl,
+  },
+});
 
     if (error) {
       setErrorMessage(error.message);
@@ -60,12 +68,12 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
 
   if (!clientSecret || !stripe || !elements) {
     return (
-      <div className="flex items-center justify-center ">
+      <div className="flex items-center bg-black justify-center ">
         <div
-          className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current bg-[#b5865d] border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+          className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current  border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
           role="status"
         >
-          <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap bg-[#b5865d] !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+          <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
             Loading...
           </span>
         </div>

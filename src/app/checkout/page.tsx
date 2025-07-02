@@ -27,14 +27,15 @@ export default function Home() {
     return <Loader/>
   }
   return (
-    <main className="w-full h-[100vh]  px-[10%] py-[5%] text-white text-center border  rounded-md bg-[#b5865d]">
-      <div className="mb-10 bg-[#b5865d]">
-        <h1 className="text-4xl font-extrabold mb-2 bg-[#b5865d] ">Gunsmart</h1>
-        <h2 className="text-2xl bg-[#b5865d]">
-          has requested
-          <span className="font-bold  bg-[#b5865d] "> ${amount}</span>
-        </h2>
-      </div>
+    <main className="w-full h-[100vh]  px-[10%] py-[5%] bg-black text-white text-center border  rounded-md ">
+<div className="mb-10  text-center bg-black">
+  <h1 className="text-5xl font-extrabold mb-4 bg-black tracking-tight">Gunsmart</h1>
+  <h2 className="text-2xl bg-black  font-medium">
+    has requested
+    <span className="font-bold bg-black text-primary ml-1">${amount}</span>
+  </h2>
+</div>
+
 
       <Elements
         stripe={stripePromise}
