@@ -52,19 +52,24 @@ pipeline {
     }
 
     stage('Deploy with Compose') {
-      steps {
-        sh '''
-          ssh -i /tmp/kk.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST '
-            cd $REMOTE_PATH &&
-            git pull origin main &&
-            docker-compose pull &&
-            docker-compose down &&
-            docker-compose up -d
-          '
-        '''
-      }
+  steps {
+    sshagent(['ec2-ssh']) {
+      sh '''
+        ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST '
+          if [ ! -d "$REMOTE_PATH/.git" ]; then
+            git clone https://github.com/Aman-agraw-35/Gunsmart.git $REMOTE_PATH
+          fi &&
+          cd $REMOTE_PATH &&
+          git pull origin main &&
+          docker-compose pull &&
+          docker-compose down &&
+          docker-compose up -d
+        '
+      '''
     }
   }
+}
+
 
   post {
     always {
