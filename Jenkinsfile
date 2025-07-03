@@ -41,23 +41,22 @@ pipeline {
       }
     }
 
-  stage('Build Docker Image') {
-  steps {
-    sh '''
-      echo "Available space before build:"
-      df -h /
+    stage('Build Docker Image') {
+      steps {
+        sh '''
+          echo "Available space before build:"
+          df -h /
 
-      export DOCKER_BUILDKIT=0
-      docker build -t $IMAGE_NAME .
+          export DOCKER_BUILDKIT=0
+          docker build -t $IMAGE_NAME .
 
-      echo "Built image size:"
-      docker images $IMAGE_NAME --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
+          echo "Built image size:"
+          docker images $IMAGE_NAME --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
 
-      docker builder prune -f || true
-    '''
-  }
-}
-
+          docker builder prune -f || true
+        '''
+      }
+    }
 
     stage('Push to Docker Hub') {
       steps {
@@ -77,11 +76,11 @@ pipeline {
         sshagent(['ec2-ssh']) {
           sh '''
             ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST '
-              docker stop $CONTAINER_NAME || true
-              docker rm $CONTAINER_NAME || true
-              docker image prune -f || true
-              docker pull $IMAGE_NAME:latest
-              docker run -d \
+              sudo docker stop $CONTAINER_NAME || true
+              sudo docker rm $CONTAINER_NAME || true
+              sudo docker image prune -f || true
+              sudo docker pull $IMAGE_NAME:latest
+              sudo docker run -d \
                 --name $CONTAINER_NAME \
                 -p $APP_PORT:3000 \
                 --restart unless-stopped \
@@ -89,7 +88,7 @@ pipeline {
                 --memory-swap=1g \
                 $IMAGE_NAME:latest
               sleep 5
-              docker ps | grep $CONTAINER_NAME || exit 1
+              sudo docker ps | grep $CONTAINER_NAME || exit 1
             '
           '''
         }
@@ -102,7 +101,7 @@ pipeline {
           sh '''
             sleep 10
             ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "
-              curl -f http://localhost:$APP_PORT || exit 1
+              sudo curl -f http://localhost:$APP_PORT || exit 1
               echo '✅ Application is responding!'
             "
           '''
@@ -125,8 +124,8 @@ pipeline {
         sh '''
           echo "Attempting EC2 cleanup..."
           ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "
-            docker stop $CONTAINER_NAME || true
-            docker rm $CONTAINER_NAME || true
+            sudo docker stop $CONTAINER_NAME || true
+            sudo docker rm $CONTAINER_NAME || true
           " || echo "Cleanup failed or not needed."
         '''
       }
