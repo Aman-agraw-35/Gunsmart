@@ -29,18 +29,28 @@ pipeline {
       }
     }
 
-    stage('Deploy with Compose') {
+    stage('Create PEM File') {
       steps {
-        sshagent(['ec2-ssh']) {
+        withCredentials([string(credentialsId: 'ec2-pem-key', variable: 'PEM_CONTENT')]) {
           sh '''
-            ssh -o StrictHostKeyChecking=no ubuntu@54.210.92.203 '
-              cd /home/ubuntu/gunsandammo &&
-              docker-compose pull &&
-              docker-compose down &&
-              docker-compose up -d
-            '
+            echo "$PEM_CONTENT" > /tmp/kk.pem
+            chmod 400 /tmp/kk.pem
           '''
         }
+      }
+    }
+
+    stage('Deploy with Compose') {
+      steps {
+        sh '''
+          ssh -i /tmp/kk.pem -o StrictHostKeyChecking=no ubuntu@54.210.92.203 '
+            cd /home/ubuntu/gunsandammo &&
+            git pull &&
+            docker-compose pull &&
+            docker-compose down &&
+            docker-compose up -d
+          '
+        '''
       }
     }
   }
