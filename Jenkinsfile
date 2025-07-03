@@ -15,13 +15,20 @@ pipeline {
       }
     }
 
+    stage('Inject .env.production') {
+      steps {
+        withCredentials([file(credentialsId: 'env-production', variable: 'ENV_FILE')]) {
+          sh 'cp "$ENV_FILE" .env.production'
+        }
+      }
+    }
+
     stage('Build Docker Image') {
       steps {
         sh 'docker build -t $IMAGE_NAME .'
       }
     }
-'
-'
+
     stage('Push to Docker Hub') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
@@ -61,7 +68,10 @@ pipeline {
 
   post {
     always {
-      sh 'rm -f /tmp/kk.pem'  // Clean up PEM file after use
+      sh '''
+        rm -f /tmp/kk.pem
+        rm -f .env.production
+      '''
     }
   }
 }
