@@ -11,12 +11,25 @@ pipeline {
   }
 
   options {
-    // Fail the build early if any command fails
     skipDefaultCheckout(true)
-    timeout(time: 30, unit: 'MINUTES')  // Optional: Timeout for the whole job
+    timeout(time: 30, unit: 'MINUTES')
   }
 
   stages {
+    stage('Cleanup Jenkins Workspace') {
+      steps {
+        sh '''
+          # Clean Jenkins workspace
+          rm -rf ${WORKSPACE}/* || true
+          
+          # Clean Docker build cache and unused images on Jenkins
+          docker builder prune -f || true
+          docker image prune -f || true
+          docker container prune -f || true
+        '''
+      }
+    }
+
     stage('Clone') {
       steps {
         script {
@@ -47,7 +60,13 @@ pipeline {
       steps {
         script {
           try {
-            sh 'docker build -t $IMAGE_NAME .'
+            sh '''
+              # Build with no-cache to ensure fresh build and remove build cache after
+              docker build --no-cache -t $IMAGE_NAME .
+              
+              # Clean up build cache immediately after build
+              docker builder prune -f || true
+            '''
           } catch (e) {
             error "❌ Docker build failed: ${e.message}"
           }
@@ -64,6 +83,9 @@ pipeline {
                 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                 docker push $IMAGE_NAME
                 docker logout
+                
+                # Remove local image after push to save space
+                docker rmi $IMAGE_NAME || true
               '''
             }
           } catch (e) {
@@ -90,6 +112,39 @@ pipeline {
       }
     }
 
+    stage('Clean EC2 Docker Resources') {
+      steps {
+        script {
+          try {
+            sh '''
+              # Clean EC2 Docker resources before deployment
+              ssh -o StrictHostKeyChecking=no -i /tmp/kk.pem $EC2_USER@$EC2_HOST "
+                # Stop and remove existing container
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
+                
+                # Remove old images (keep only latest)
+                docker images $IMAGE_NAME --format 'table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.CreatedAt}}' | grep -v 'REPOSITORY' | sort -k3 -r | tail -n +2 | awk '{print \$2}' | xargs -r docker rmi || true
+                
+                # Clean up unused Docker resources
+                docker image prune -f || true
+                docker container prune -f || true
+                docker network prune -f || true
+                docker volume prune -f || true
+                
+                # Show available space
+                df -h /
+                echo 'Available Docker space:'
+                docker system df
+              "
+            '''
+          } catch (e) {
+            error "❌ Failed to clean EC2 Docker resources: ${e.message}"
+          }
+        }
+      }
+    }
+
     stage('Deploy to EC2') {
       steps {
         script {
@@ -98,13 +153,6 @@ pipeline {
               # Test SSH connection first
               ssh -o StrictHostKeyChecking=no -i /tmp/kk.pem $EC2_USER@$EC2_HOST "echo 'SSH connection successful'"
               
-              # Stop and remove existing container if it exists
-              ssh -o StrictHostKeyChecking=no -i /tmp/kk.pem $EC2_USER@$EC2_HOST "
-                docker stop $CONTAINER_NAME || true
-                docker rm $CONTAINER_NAME || true
-                docker image prune -f || true
-              "
-              
               # Pull latest image and run container
               ssh -o StrictHostKeyChecking=no -i /tmp/kk.pem $EC2_USER@$EC2_HOST "
                 docker pull $IMAGE_NAME:latest
@@ -112,6 +160,8 @@ pipeline {
                   --name $CONTAINER_NAME \\
                   -p $APP_PORT:3000 \\
                   --restart unless-stopped \\
+                  --memory=512m \\
+                  --memory-swap=1g \\
                   $IMAGE_NAME:latest
               "
               
@@ -120,6 +170,9 @@ pipeline {
               ssh -o StrictHostKeyChecking=no -i /tmp/kk.pem $EC2_USER@$EC2_HOST "
                 docker ps | grep $CONTAINER_NAME || exit 1
                 echo 'Container is running successfully'
+                
+                # Final space check
+                df -h /
               "
             '''
           } catch (e) {
@@ -169,8 +222,13 @@ pipeline {
     failure {
       echo '🚨 Build failed. Check logs above.'
       script {
-        // Optional: Send notification or rollback
-        echo 'Consider implementing rollback mechanism here'
+        // Clean up on failure
+        sh '''
+          ssh -o StrictHostKeyChecking=no -i /tmp/kk.pem $EC2_USER@$EC2_HOST "
+            docker stop $CONTAINER_NAME || true
+            docker rm $CONTAINER_NAME || true
+          " || true
+        '''
       }
     }
 
