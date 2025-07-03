@@ -40,38 +40,27 @@ pipeline {
       }
     }
 
-    stage('Create PEM File') {
-      steps {
-        withCredentials([string(credentialsId: 'ec2-pem-key', variable: 'PEM_CONTENT')]) {
-          sh '''
-            echo "$PEM_CONTENT" > /tmp/kk.pem
-            chmod 400 /tmp/kk.pem
-          '''
-        }
-      }
-    }
-
     stage('Deploy with Compose') {
       steps {
-        sh '''
-          ssh -i /tmp/kk.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST '
-            cd $REMOTE_PATH &&
-            git pull origin main &&
-            docker-compose pull &&
-            docker-compose down &&
-            docker-compose up -d
-          '
-        '''
+        withCredentials([file(credentialsId: 'ec2-ssh', variable: 'PEM_FILE')]) {
+          sh '''
+            chmod 400 "$PEM_FILE"
+            ssh -i "$PEM_FILE" -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST '
+              cd $REMOTE_PATH &&
+              git pull origin main &&
+              docker-compose pull &&
+              docker-compose down &&
+              docker-compose up -d
+            '
+          '''
+        }
       }
     }
   }
 
   post {
     always {
-      sh '''
-        rm -f /tmp/kk.pem
-        rm -f .env.production
-      '''
+      sh 'rm -f .env.production'
     }
   }
 }
