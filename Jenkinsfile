@@ -3,12 +3,15 @@ pipeline {
 
   environment {
     IMAGE_NAME = "amanagraw35/nextjs-app"
+    EC2_HOST = "54.210.92.203"
+    EC2_USER = "ubuntu"
+    REMOTE_PATH = "/home/ubuntu/gunsandammo"
   }
 
   stages {
     stage('Clone') {
       steps {
-        git credentialsId: 'github-creds', url: 'https://github.com/Aman-agraw-35/Gunsmart.git'
+        git branch: 'main', credentialsId: 'github-creds', url: 'https://github.com/Aman-agraw-35/Gunsmart.git'
       }
     }
 
@@ -43,15 +46,21 @@ pipeline {
     stage('Deploy with Compose') {
       steps {
         sh '''
-          ssh -i /tmp/kk.pem -o StrictHostKeyChecking=no ubuntu@54.210.92.203 '
-            cd /home/ubuntu/gunsandammo &&
-            git pull &&
+          ssh -i /tmp/kk.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST '
+            cd $REMOTE_PATH &&
+            git pull origin main &&
             docker-compose pull &&
             docker-compose down &&
             docker-compose up -d
           '
         '''
       }
+    }
+  }
+
+  post {
+    always {
+      sh 'rm -f /tmp/kk.pem'  // Clean up PEM file after use
     }
   }
 }
