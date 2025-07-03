@@ -33,7 +33,7 @@ pipeline {
       steps {
         sshagent(['ec2-ssh']) {
           sh '''
-            ssh -o StrictHostKeyChecking=no ubuntu@<EC2_PUBLIC_IP> '
+            ssh -o StrictHostKeyChecking=no ubuntu@54.210.92.203 '
               cd /home/ubuntu/gunsandammo &&
               docker-compose pull &&
               docker-compose down &&

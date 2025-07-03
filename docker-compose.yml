@@ -2,20 +2,29 @@ version: '3.8'
 
 services:
   nextjs-app1:
+    container_name: nextjs-app1
     build: .
     expose:
       - "3000"
     environment:
       - NODE_ENV=production
+    restart: always
+    networks:
+      - webnet
 
   nextjs-app2:
+    container_name: nextjs-app2
     build: .
     expose:
       - "3000"
     environment:
       - NODE_ENV=production
+    restart: always
+    networks:
+      - webnet
 
   nginx:
+    container_name: nginx
     image: nginx:latest
     ports:
       - "80:80"
@@ -24,3 +33,9 @@ services:
     depends_on:
       - nextjs-app1
       - nextjs-app2
+    restart: always
+    networks:
+      - webnet
+
+networks:
+  webnet:
