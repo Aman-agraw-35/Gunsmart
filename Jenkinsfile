@@ -41,22 +41,23 @@ pipeline {
       }
     }
 
-    stage('Build Docker Image') {
-      steps {
-        sh '''
-          echo "Available space before build:"
-          df -h /
+  stage('Build Docker Image') {
+  steps {
+    sh '''
+      echo "Available space before build:"
+      df -h /
 
-          export DOCKER_BUILDKIT=1
-          docker build -t $IMAGE_NAME .
+      export DOCKER_BUILDKIT=0
+      docker build -t $IMAGE_NAME .
 
-          echo "Built image size:"
-          docker images $IMAGE_NAME --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
+      echo "Built image size:"
+      docker images $IMAGE_NAME --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
 
-          docker builder prune -f || true
-        '''
-      }
-    }
+      docker builder prune -f || true
+    '''
+  }
+}
+
 
     stage('Push to Docker Hub') {
       steps {
