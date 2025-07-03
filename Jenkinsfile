@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Clone') {
       steps {
-        git credentialsId: 'github-creds', url: 'https://github.com/amanagraw35/gunsandammo.git'
+        git credentialsId: 'github-creds', url: 'https://github.com/Aman-agraw-35/Gunsmart.git'
       }
     }
 
