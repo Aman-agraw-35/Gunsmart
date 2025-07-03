@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     IMAGE_NAME = "amanagraw35/nextjs-app"
-    EC2_HOST = "54.210.92.203"
+    EC2_HOST = "3.91.84.218"
     EC2_USER = "ubuntu"
     REMOTE_PATH = "/home/ubuntu/gunsandammo"
   }
