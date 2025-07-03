@@ -6,6 +6,8 @@ pipeline {
     EC2_HOST = "3.91.84.218"
     EC2_USER = "ubuntu"
     REMOTE_PATH = "/home/ubuntu/gunsandammo"
+    CONTAINER_NAME = "nextjs-app-container"
+    APP_PORT = "3000"
   }
 
   options {
@@ -61,6 +63,7 @@ pipeline {
               sh '''
                 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                 docker push $IMAGE_NAME
+                docker logout
               '''
             }
           } catch (e) {
@@ -86,6 +89,66 @@ pipeline {
         }
       }
     }
+
+    stage('Deploy to EC2') {
+      steps {
+        script {
+          try {
+            sh '''
+              # Test SSH connection first
+              ssh -o StrictHostKeyChecking=no -i /tmp/kk.pem $EC2_USER@$EC2_HOST "echo 'SSH connection successful'"
+              
+              # Stop and remove existing container if it exists
+              ssh -o StrictHostKeyChecking=no -i /tmp/kk.pem $EC2_USER@$EC2_HOST "
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
+                docker image prune -f || true
+              "
+              
+              # Pull latest image and run container
+              ssh -o StrictHostKeyChecking=no -i /tmp/kk.pem $EC2_USER@$EC2_HOST "
+                docker pull $IMAGE_NAME:latest
+                docker run -d \\
+                  --name $CONTAINER_NAME \\
+                  -p $APP_PORT:3000 \\
+                  --restart unless-stopped \\
+                  $IMAGE_NAME:latest
+              "
+              
+              # Verify deployment
+              sleep 10
+              ssh -o StrictHostKeyChecking=no -i /tmp/kk.pem $EC2_USER@$EC2_HOST "
+                docker ps | grep $CONTAINER_NAME || exit 1
+                echo 'Container is running successfully'
+              "
+            '''
+          } catch (e) {
+            error "❌ Deployment to EC2 failed: ${e.message}"
+          }
+        }
+      }
+    }
+
+    stage('Health Check') {
+      steps {
+        script {
+          try {
+            sh '''
+              # Wait for application to start
+              sleep 15
+              
+              # Check if the application is responding
+              ssh -o StrictHostKeyChecking=no -i /tmp/kk.pem $EC2_USER@$EC2_HOST "
+                curl -f http://localhost:$APP_PORT || exit 1
+                echo 'Application health check passed'
+              "
+            '''
+          } catch (e) {
+            error "❌ Health check failed: ${e.message}"
+          }
+        }
+      }
+    }
   }
 
   post {
@@ -94,15 +157,26 @@ pipeline {
         // Cleanup files safely
         sh 'rm -f /tmp/kk.pem || true'
         sh 'rm -f .env.production || true'
+        
+        // Clean up Docker resources on Jenkins agent
+        sh '''
+          docker system prune -f || true
+          docker logout || true
+        '''
       }
     }
 
     failure {
       echo '🚨 Build failed. Check logs above.'
+      script {
+        // Optional: Send notification or rollback
+        echo 'Consider implementing rollback mechanism here'
+      }
     }
 
     success {
-      echo '✅ Build completed successfully.'
+      echo '✅ Build and deployment completed successfully.'
+      echo "🚀 Application should be accessible at http://${EC2_HOST}:${APP_PORT}"
     }
   }
 }
