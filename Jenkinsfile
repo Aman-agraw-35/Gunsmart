@@ -9,7 +9,6 @@ pipeline {
   }
 
   stages {
-
     stage('Clone') {
       steps {
         git branch: 'main', credentialsId: 'github-creds', url: 'https://github.com/Aman-agraw-35/Gunsmart.git'
@@ -41,29 +40,38 @@ pipeline {
       }
     }
 
-    stage('Deploy with Compose') {
+    stage('Create PEM File') {
       steps {
-        sshagent(['ec2-ssh']) {
+        withCredentials([string(credentialsId: 'ec2-pem-key', variable: 'PEM_CONTENT')]) {
           sh '''
-            ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST '
-              if [ ! -d "$REMOTE_PATH/.git" ]; then
-                git clone https://github.com/Aman-agraw-35/Gunsmart.git $REMOTE_PATH
-              fi &&
-              cd $REMOTE_PATH &&
-              git pull origin main &&
-              docker-compose pull &&
-              docker-compose down &&
-              docker-compose up -d
-            '
+            echo "$PEM_CONTENT" > /tmp/kk.pem
+            chmod 400 /tmp/kk.pem
           '''
         }
+      }
+    }
+
+    stage('Deploy with Compose') {
+      steps {
+        sh '''
+          ssh -i /tmp/kk.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST '
+            cd $REMOTE_PATH &&
+            git pull origin main &&
+            docker-compose pull &&
+            docker-compose down &&
+            docker-compose up -d
+          '
+        '''
       }
     }
   }
 
   post {
     always {
-      sh 'rm -f .env.production'
+      sh '''
+        rm -f /tmp/kk.pem
+        rm -f .env.production
+      '''
     }
   }
 }
