@@ -96,21 +96,22 @@ pipeline {
     }
 
     stage('Create PEM File') {
-      steps {
-        script {
-          try {
-            withCredentials([string(credentialsId: 'ec2-pem-key', variable: 'PEM_CONTENT')]) {
-              sh '''
-                echo "$PEM_CONTENT" > /tmp/kk.pem
-                chmod 400 /tmp/kk.pem
-              '''
-            }
-          } catch (e) {
-            error "❌ Failed to create PEM file: ${e.message}"
-          }
+  steps {
+    script {
+      try {
+        withCredentials([string(credentialsId: 'ec2-pem-key', variable: 'PEM_CONTENT')]) {
+          writeFile file: '/tmp/kk.pem', text: PEM_CONTENT.trim()
+          sh '''
+            chmod 400 /tmp/kk.pem
+            ls -l /tmp/kk.pem
+          '''
         }
+      } catch (e) {
+        error "❌ Failed to create PEM file: ${e.message}"
       }
     }
+  }
+}
 
     stage('Clean EC2 Docker Resources') {
       steps {
