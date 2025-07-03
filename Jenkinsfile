@@ -74,23 +74,23 @@ pipeline {
     stage('Deploy to EC2 via SSH') {
       steps {
         sshagent(['ec2-ssh']) {
-          sh '''
-            ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST '
-              sudo docker stop $CONTAINER_NAME || true
-              sudo docker rm $CONTAINER_NAME || true
+          sh """
+            ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} "
+              sudo docker stop ${CONTAINER_NAME} || true
+              sudo docker rm ${CONTAINER_NAME} || true
               sudo docker image prune -f || true
-              sudo docker pull $IMAGE_NAME:latest
-              sudo docker run -d \
-                --name $CONTAINER_NAME \
-                -p $APP_PORT:3000 \
-                --restart unless-stopped \
-                --memory=512m \
-                --memory-swap=1g \
-                $IMAGE_NAME:latest
+              sudo docker pull ${IMAGE_NAME}:latest
+              sudo docker run -d \\
+                --name ${CONTAINER_NAME} \\
+                -p ${APP_PORT}:3000 \\
+                --restart unless-stopped \\
+                --memory=512m \\
+                --memory-swap=1g \\
+                ${IMAGE_NAME}:latest
               sleep 5
-              sudo docker ps | grep $CONTAINER_NAME || exit 1
-            '
-          '''
+              sudo docker ps | grep ${CONTAINER_NAME} || exit 1
+            "
+          """
         }
       }
     }
@@ -98,13 +98,13 @@ pipeline {
     stage('Health Check') {
       steps {
         sshagent(['ec2-ssh']) {
-          sh '''
+          sh """
             sleep 10
-            ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "
-              sudo curl -f http://localhost:$APP_PORT || exit 1
+            ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} "
+              curl -f http://localhost:${APP_PORT} || exit 1
               echo '✅ Application is responding!'
             "
-          '''
+          """
         }
       }
     }
@@ -121,13 +121,13 @@ pipeline {
     failure {
       echo '❌ Build failed.'
       sshagent(['ec2-ssh']) {
-        sh '''
+        sh """
           echo "Attempting EC2 cleanup..."
-          ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "
-            sudo docker stop $CONTAINER_NAME || true
-            sudo docker rm $CONTAINER_NAME || true
+          ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} "
+            sudo docker stop ${CONTAINER_NAME} || true
+            sudo docker rm ${CONTAINER_NAME} || true
           " || echo "Cleanup failed or not needed."
-        '''
+        """
       }
     }
 
