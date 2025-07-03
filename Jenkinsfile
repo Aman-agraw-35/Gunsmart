@@ -42,10 +42,9 @@ pipeline {
 
     stage('Deploy with Compose') {
       steps {
-        withCredentials([file(credentialsId: 'ec2-ssh', variable: 'PEM_FILE')]) {
+        sshagent(['ec2-ssh']) {
           sh '''
-            chmod 400 "$PEM_FILE"
-            ssh -i "$PEM_FILE" -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST '
+            ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST '
               cd $REMOTE_PATH &&
               git pull origin main &&
               docker-compose pull &&
@@ -59,7 +58,6 @@ pipeline {
   }
 
   post {
-    
     always {
       sh 'rm -f .env.production'
     }
