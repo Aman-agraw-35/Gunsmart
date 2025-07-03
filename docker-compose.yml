@@ -1,9 +1,8 @@
-version: '3.8'
-
 services:
   nextjs-app1:
     container_name: nextjs-app1
-    build: .
+    build:
+      context: .
     expose:
       - "3000"
     environment:
@@ -11,10 +10,16 @@ services:
     restart: always
     networks:
       - webnet
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   nextjs-app2:
     container_name: nextjs-app2
-    build: .
+    build:
+      context: .
     expose:
       - "3000"
     environment:
@@ -22,6 +27,11 @@ services:
     restart: always
     networks:
       - webnet
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   nginx:
     container_name: nginx
