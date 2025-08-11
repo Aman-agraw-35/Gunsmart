@@ -1,9 +1,0 @@
-- name: Setup EC2 for Jenkins and CI/CD
-  hosts: ec2
-  become: true
-
-  roles:
-    - common
-    - swap
-    - docker
-    - jenkins
