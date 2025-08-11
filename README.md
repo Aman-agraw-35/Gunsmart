@@ -10,6 +10,10 @@ Guns-Mart is a modern guns shopping app built with Next.js, React, and other tec
 - Responsive design for a great user experience on various devices.
 - Used Demo profile named "Aman Agrawal".
 - Implemented payment gateway with "Stripe".
+
+## Loom video explaining the DevOps Integration
+  [![Watch the Loom Video](https://cdn.loom.com/sessions/thumbnails/5ca7261c5ad14518b872bece8ee84d78-with-timestamp.png)](https://www.loom.com/share/5ca7261c5ad14518b872bece8ee84d78)
+
 ## Technologies Used
 
 - Next.js
