@@ -18,6 +18,8 @@
     "@stripe/stripe-js": "^4.1.0",
     "anchor-pki": "^0.3.2",
     "axios": "^1.6.2",
+    "bcryptjs": "^3.0.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
     "next": "^14.2.4",
     "react": "^18",
@@ -25,6 +27,7 @@
     "stripe": "^16.1.0"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
