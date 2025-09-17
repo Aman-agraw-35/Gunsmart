@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import "./signup.css";
 
 export default function SignupPage() {
     const router = useRouter();
@@ -54,65 +53,106 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="signup-container">
-            <div className="signup-card">
-                <h1>Sign Up</h1>
-                {error && <div className="error">{error}</div>}
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="username">Username:</label>
-                        <input
-                            type="text"
-                            id="username"
-                            value={user.username}
-                            onChange={(e) => setUser({...user, username: e.target.value})}
-                            required
-                            placeholder="Enter your username"
-                        />
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8">
+            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+                <div>
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                        Create your account
+                    </h2>
+                </div>
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <span className="block sm:inline">{error}</span>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="email">Email:</label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={user.email}
-                            onChange={(e) => setUser({...user, email: e.target.value})}
-                            required
-                            placeholder="Enter your email"
-                        />
+                )}
+                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                    <div className="space-y-4">
+                        <div>
+                            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                                Username
+                            </label>
+                            <input
+                                id="username"
+                                name="username"
+                                type="text"
+                                required
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                placeholder="Enter your username"
+                                value={user.username}
+                                onChange={(e) => setUser({...user, username: e.target.value})}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                                Email address
+                            </label>
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                required
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                placeholder="Enter your email"
+                                value={user.email}
+                                onChange={(e) => setUser({...user, email: e.target.value})}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                                Password
+                            </label>
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                required
+                                minLength={6}
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                placeholder="Enter your password"
+                                value={user.password}
+                                onChange={(e) => setUser({...user, password: e.target.value})}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                                Confirm Password
+                            </label>
+                            <input
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                type="password"
+                                required
+                                minLength={6}
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                placeholder="Confirm your password"
+                                value={user.confirmPassword}
+                                onChange={(e) => setUser({...user, confirmPassword: e.target.value})}
+                            />
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={user.password}
-                            onChange={(e) => setUser({...user, password: e.target.value})}
-                            required
-                            minLength={6}
-                            placeholder="Enter your password"
-                        />
+
+                    <div>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+                                loading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'
+                            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                        >
+                            {loading ? "Signing up..." : "Sign Up"}
+                        </button>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="confirmPassword">Confirm Password:</label>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            value={user.confirmPassword}
-                            onChange={(e) => setUser({...user, confirmPassword: e.target.value})}
-                            required
-                            minLength={6}
-                            placeholder="Confirm your password"
-                        />
-                    </div>
-                    <button type="submit" disabled={loading}>
-                        {loading ? "Signing up..." : "Sign Up"}
-                    </button>
                 </form>
-                <p className="login-link">
-                    Already have an account? <Link href="/login">Login here</Link>
-                </p>
+                <div className="text-sm text-center mt-4">
+                    <p className="text-gray-600">
+                        Already have an account?{' '}
+                        <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+                            Login here
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     );
 }
+    

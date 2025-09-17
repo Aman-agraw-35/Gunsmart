@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 
 export async function connect(){
 try{
-    mongoose.connect("mongodb+srv://aman:hehe@cluster0.v6ixzty.mongodb.net/gun")
+    if (!process.env.MONGODB_URI) {
+      throw new Error('Please define the MONGODB_URI environment variable');
+    }
+    await mongoose.connect(process.env.MONGODB_URI)
     const connection = mongoose.connection;
 
     connection.on('connected',() => {
