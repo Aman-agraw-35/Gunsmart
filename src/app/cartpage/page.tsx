@@ -153,7 +153,7 @@ import { useRouter } from 'next/navigation';
   return (
     <>
       <Header/>
-      <div className="cart-page w-full h-[max] pt-20 flex xl:px-32 lg:px-6 lg:items-start items-center lg:flex-row flex-col-reverse"> 
+      <div className="cart-page w-full  min-h-screen pt-20 flex xl:px-32 lg:px-6 lg:items-start items-center lg:flex-row flex-col-reverse"> 
         <div className="md:w-[70%] w-[90%] ml-4 py-8 mr-4 ">
           <div className="h-44 bg-white p-6 border-b-[0.001px] border-[#8f8f8f] ">
             <h1 className="text-4xl bg-white text-[#287480] font-semibold border-b-[1px] border-black pb-5 ">Shopping Cart</h1>
