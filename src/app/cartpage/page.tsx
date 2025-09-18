@@ -11,23 +11,35 @@ import { faPlus ,faMinus } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from 'next/navigation';
 
     const Cartpage = () => {
-  const [isLoading, setIsLoading] = useState(1)
+  const [isLoading, setIsLoading] = useState(true)
   const [saleTotal ,setSaleTotal] = useState("0")
   const [retailTotal ,setRetailTotal] = useState("0")
-  const [dataFromCart, setDataFromCart] = useState([])
+  const [dataFromCart, setDataFromCart] = useState<any[]>([])
+  const [itemLoading, setItemLoading] = useState<Record<string, boolean>>({})
+  // pending deltas per item to debounce rapid clicks (positive for plus, negative for minus)
+  const [pendingDeltas, setPendingDeltas] = useState<Record<string, number>>({})
+  const timersRef = React.useRef<Record<string, NodeJS.Timeout | number | null>>({})
   const router = useRouter();
 
   
     const fetchData = async () => {
       try {
-        const res = await axios.get('../api/cart')
-        console.log(res.data)
-        setDataFromCart(res.data.data)
-        setSaleTotal((res.data.salePriceTotal))
-        setRetailTotal(res.data.retailPriceTotal)
-        setIsLoading(0);
-      } catch (err) {
-        console.log(err);
+        const res = await axios.get('../api/cart', { withCredentials: true })
+        if (res.data?.error) {
+          // handle not logged in
+          console.warn('cart fetch error', res.data.error)
+          setIsLoading(false)
+          setDataFromCart([])
+          return
+        }
+        console.log('cart fetch', res.data)
+        setDataFromCart(res.data.data || [])
+        setSaleTotal(String(res.data.salePriceTotal ?? "0"))
+        setRetailTotal(String(res.data.retailPriceTotal ?? "0"))
+        setIsLoading(false)
+      } catch (err:any) {
+        console.log(err.message || err)
+        setIsLoading(false)
       }
     };
 
@@ -41,37 +53,92 @@ import { useRouter } from 'next/navigation';
       }
     };
     
-  const handlePlusClick = (async (db: any) => {
+  const sendPlusRequest = async (db: string, amount: number) => {
     try {
-      const response = await axios.post("../api/cartPlus",  {plus:db})
-      console.log(db + '  ' + response.data);
-      fetchData();
-    } catch (error:any) {
-      console.log("Process failed", error.message);
-    } 
-  })
+      setItemLoading(prev => ({ ...prev, [db]: true }))
+      const response = await axios.post("../api/cartPlus", { plus: db, amount }, { withCredentials: true })
+      if (response.data?.error) throw new Error(response.data.error)
+      await fetchData()
+    } catch (err:any) {
+      console.error('sendPlusRequest failed', err.message)
+      await fetchData()
+    } finally {
+      setItemLoading(prev => ({ ...prev, [db]: false }))
+    }
+  }
+
+  const handlePlusClick = (db: any) => {
+    if (!db) return
+    // increment pending delta for this item
+    setPendingDeltas(prev => ({ ...prev, [db]: (prev[db] || 0) + 1 }))
+    // clear existing timer
+    const existing = timersRef.current[db]
+    if (existing) clearTimeout(existing as any)
+    // start new debounce timer (500ms)
+    timersRef.current[db] = setTimeout(() => {
+      const amount = pendingDeltas[db] ?? 0
+      // read latest pending from state (may be stale in closure) - fetch then clear
+      setPendingDeltas((latest) => {
+        const finalAmount = latest[db] ?? 0
+        if (finalAmount !== 0) sendPlusRequest(db, finalAmount)
+        const copy = { ...latest }
+        delete copy[db]
+        return copy
+      })
+      timersRef.current[db] = null
+    }, 500)
+  }
   
-  const handleMinusClick = (async (db: any) => {
+  const sendMinusRequest = async (db: string, amount: number) => {
     try {
-      const response = await axios.post("../api/cartMinus",  {minus:db });
-      console.log(db + '  ' + response.data);
-      fetchData();
-    } catch (error:any) {
-      console.log("Process failed", error.message);
-    } 
-  })
-  const handleRemoveClick = (async (d: any) => {
+      setItemLoading(prev => ({ ...prev, [db]: true }))
+      const response = await axios.post("../api/cartMinus", { minus: db, amount }, { withCredentials: true })
+      if (response.data?.error) throw new Error(response.data.error)
+      await fetchData()
+    } catch (err:any) {
+      console.error('sendMinusRequest failed', err.message)
+      await fetchData()
+    } finally {
+      setItemLoading(prev => ({ ...prev, [db]: false }))
+    }
+  }
+
+  const handleMinusClick = (db: any) => {
+    if (!db) return
+    setPendingDeltas(prev => ({ ...prev, [db]: (prev[db] || 0) - 1 }))
+    const existing = timersRef.current[db]
+    if (existing) clearTimeout(existing as any)
+    timersRef.current[db] = setTimeout(() => {
+      setPendingDeltas((latest) => {
+        const finalAmount = latest[db] ?? 0
+        if (finalAmount !== 0) {
+          if (finalAmount > 0) sendPlusRequest(db, finalAmount)
+          else sendMinusRequest(db, Math.abs(finalAmount))
+        }
+        const copy = { ...latest }
+        delete copy[db]
+        return copy
+      })
+      timersRef.current[db] = null
+    }, 500)
+  }
+  const handleRemoveClick = async (d: any) => {
+    if (!d) return
+    setItemLoading(prev => ({ ...prev, [d]: true }))
     try {
-      const response = await axios.post("../api/cartMinus",  {remove : d});
-      console.log(d + '  ' + response.data);
-      fetchData();
-    } catch (error:any) {
-      console.log("Process failed", error.message);
-    } 
-  })
+      const response = await axios.post("../api/cartMinus", { remove: d }, { withCredentials: true })
+      if (response.data?.error) throw new Error(response.data.error)
+      await fetchData()
+    } catch (err:any) {
+      console.error('remove failed', err.message)
+      await fetchData()
+    } finally {
+      setItemLoading(prev => ({ ...prev, [d]: false }))
+    }
+  }
     useEffect(() => {
-    fetchData();
-  }, []);
+      fetchData();
+    }, []);
 
   if (isLoading) {
     return <Loader/>;
@@ -92,16 +159,19 @@ import { useRouter } from 'next/navigation';
             <h1 className="text-4xl bg-white text-[#287480] font-semibold border-b-[1px] border-black pb-5 ">Shopping Cart</h1>
             <h1 className="text-xl bg-white pt-2 text-black float-right  ">{dataFromCart.length}&nbsp;{dataFromCart.length == 1 ? "Item":"Items"}</h1>
           </div>
-          {dataFromCart?.map( (cartItem:any) => (
-          <div key={cartItem.id} className="h-44 bg-white lg:p-6 pl-1 py-6 pr-2  border-b-[0.001px] border-[#8f8f8f] flex ">
+          {dataFromCart?.filter(Boolean).map((cartItem:any, idx:number) => (
+          <div key={cartItem?.id ?? `cart-item-${idx}`} className="h-44 bg-white lg:p-6 pl-1 py-6 pr-2  border-b-[0.001px] border-[#8f8f8f] flex ">
             <div className="h-full lg:w-[17%] w-[33%]  ">
+            {cartItem?.image ? (
             <Image 
             src={cartItem.image}
-            alt={cartItem.name}
+            alt={cartItem.name || 'Product image'}
             width={460}
             height={460}
             className='object-contain object-center h-full w-full  bg-[#ffffff] '
-            />
+            />) : (
+              <div className="h-full w-full bg-[#f3f3f3] flex items-center justify-center text-gray-500">No image</div>
+            )}
             </div>
             <div className="md:w-[80%] w-[70%] bg-white h-full md:py-4  md:px-4 pr-2 pl-4 text-black ">
             <h1 className="text-lg bg-white font-semibold pb-4">{cartItem.name}</h1>

@@ -10,7 +10,7 @@ export const CardSection:any = () => {
  const handleClick =  async (d: any) =>
   {
     try {
-      const response = await axios.post("../api/card", d )
+      const response = await axios.post("../api/card", d, { withCredentials: true })
       router.push(`/itempage/${d}`);
       
     } catch (error:any) {

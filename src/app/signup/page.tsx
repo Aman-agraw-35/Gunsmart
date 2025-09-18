@@ -53,19 +53,26 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Create your account
-                    </h2>
-                </div>
+        <div className="min-h-screen w-full bg-cover bg-center" style={{ backgroundImage: "url('/war.jpg')" }}>
+            <div className="min-h-screen w-full bg-black/50 flex items-center justify-center px-4 py-12">
+                <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    {/* Left intro panel */}
+                    <div className="hidden md:flex flex-col items-start justify-center text-white px-6">
+                        <h1 className="text-4xl font-extrabold mb-4">Join Gunsmart</h1>
+                        <p className="text-lg text-gray-100/90">Create an account to save your cart, checkout faster and manage orders.</p>
+                        <p className="mt-6 text-sm text-gray-200/80">Secure passwords, responsive UI and a smooth checkout experience.</p>
+                    </div>
+                    {/* Form panel */}
+                    <div className="w-full max-w-md mx-auto bg-white/95 rounded-xl shadow-xl p-6 md:p-8">
+                        <div>
+                            <h2 className="text-center text-2xl md:text-3xl font-extrabold text-gray-900">Create your account</h2>
+                        </div>
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                         <span className="block sm:inline">{error}</span>
                     </div>
                 )}
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                        <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
                     <div className="space-y-4">
                         <div>
                             <label htmlFor="username" className="block text-sm font-medium text-gray-700">
@@ -76,7 +83,7 @@ export default function SignupPage() {
                                 name="username"
                                 type="text"
                                 required
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="Enter your username"
                                 value={user.username}
                                 onChange={(e) => setUser({...user, username: e.target.value})}
@@ -131,25 +138,27 @@ export default function SignupPage() {
                         </div>
                     </div>
 
-                    <div>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
-                                loading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'
-                            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
-                        >
-                            {loading ? "Signing up..." : "Sign Up"}
-                        </button>
+                            <div>
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+                                        loading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'
+                                    } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                                >
+                                    {loading ? "Signing up..." : "Sign Up"}
+                                </button>
+                            </div>
+                        </form>
+                        <div className="text-sm text-center mt-4">
+                            <p className="text-gray-600">
+                                Already have an account?{' '}
+                                <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                    Login here
+                                </Link>
+                            </p>
+                        </div>
                     </div>
-                </form>
-                <div className="text-sm text-center mt-4">
-                    <p className="text-gray-600">
-                        Already have an account?{' '}
-                        <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-                            Login here
-                        </Link>
-                    </p>
                 </div>
             </div>
         </div>

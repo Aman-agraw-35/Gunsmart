@@ -15,71 +15,65 @@ export async function POST(request: NextRequest){
 
         // Verify token and get user ID
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as { id: string };
-        reqBody = await request.json();
-        
-        let userInDatabase = await User.findById(decoded.id);
+        const reqBody = await request.json();
+
+        const userInDatabase = await User.findById(decoded.id);
         if (!userInDatabase) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
-      
-      let indexingMinus: any;      
-      if(reqBody.minus){
-      userInDatabase.idProduct.forEach((element: any, index: any) => {
-        if (element == reqBody.minus) {
-          indexingMinus = index;
-        }
-      });
-      if (userInDatabase.Quantity[indexingMinus] == 1) {
-        await User.findByIdAndUpdate(decoded.id,
-          {
-            $unset: {
-              [`idProduct.${indexingMinus}`]: 1,
-              [`Quantity.${indexingMinus}`]: 1,
-            },
-          }
-        );
-        await User.findByIdAndUpdate(
-          decoded.id,
-          {
-            $pull: { idProduct: null, Quantity: null },
-          }
-        );
-      }else{
-      await User.findByIdAndUpdate(
-        decoded.id,
-        { $set: { [`Quantity.${indexingMinus}`]: +userInDatabase.Quantity[indexingMinus] - 1 } }
-      );
-    }
-      return NextResponse.json({
-        message: "we subtracted Quantity",
-      });
-      }
 
-      let indexingRemove: any;
-      if(reqBody.remove){
-        userInDatabase.idProduct.forEach((element: any, index: any) => {
-          if (element == reqBody.remove) {
-            indexingRemove = index;
+        if (!Array.isArray(userInDatabase.idProduct)) userInDatabase.idProduct = [];
+        if (!Array.isArray(userInDatabase.Quantity)) userInDatabase.Quantity = [];
+
+        // Handle minus operation
+        if (reqBody.minus) {
+          const minusIdStr = String(reqBody.minus);
+          const amount = Number(reqBody.amount ?? 1);
+          if (!Number.isFinite(amount) || amount <= 0) {
+            return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
           }
-        });
-          await User.findOneAndUpdate({ username: "Aman Agrawal" },
-            {
-              $unset: {
-                [`idProduct.${indexingRemove}`]: 1,
-                [`Quantity.${indexingRemove}`]: 1,
-              },
-            }
+
+          const index = userInDatabase.idProduct.findIndex((el: any) => String(el) === minusIdStr);
+          if (index === -1) {
+            return NextResponse.json({ error: "Item not found in cart" }, { status: 404 });
+          }
+
+          const currentQty = Number(userInDatabase.Quantity[index] ?? 0);
+          if (currentQty <= amount) {
+            // remove item
+            await User.findByIdAndUpdate(
+              decoded.id,
+              { $pull: { idProduct: minusIdStr, Quantity: { $in: [userInDatabase.Quantity[index]] } } },
+              { new: true }
+            );
+            return NextResponse.json({ message: "Item removed from cart", success: true });
+          }
+
+          // decrement by amount
+          await User.findByIdAndUpdate(
+            decoded.id,
+            { $set: { [`Quantity.${index}`]: currentQty - amount } },
+            { new: true }
           );
-          await User.findOneAndUpdate(
-            { username: "Aman Agrawal" },
-            {
-              $pull: { idProduct: null, Quantity: null },
-            }
-          )
-      
-        return NextResponse.json({
-          message: "we subtracted Quantity",
-        });
+
+          return NextResponse.json({ message: "Item quantity decreased", success: true });
+        }
+
+        // Handle remove operation
+        if (reqBody.remove) {
+          const removeIdStr = String(reqBody.remove);
+          const index = userInDatabase.idProduct.findIndex((el: any) => String(el) === removeIdStr);
+          if (index === -1) {
+            return NextResponse.json({ error: "Item not found in cart" }, { status: 404 });
+          }
+
+          await User.findByIdAndUpdate(
+            decoded.id,
+            { $pull: { idProduct: removeIdStr, Quantity: { $in: [userInDatabase.Quantity[index]] } } },
+            { new: true }
+          );
+
+          return NextResponse.json({ message: "Item removed from cart", success: true });
         }
       
     } catch (error: any) {

@@ -24,7 +24,7 @@ interface Item{
 
 const ParticularItem = ({params}:any) => {
   const [id, setId] = useState<Item>({
-    id: params.id,
+    id: Number(params.id) || 0,
     name: "",
     image: "",
     retailPrice:"",
@@ -36,35 +36,41 @@ const ParticularItem = ({params}:any) => {
   })
   const [offPercentage , setOffPercentage] = useState("");
   const [offPrice , setOffPrice] = useState("");
-  const [isLoading, setIsLoading] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
   const items = Data;
   const router = useRouter();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get('../api/card')
-        const number = res.data.data
-        const newwe = items[number - 1];
-        setId(newwe)
-        setIsLoading(0)
-        setOffPercentage(((1 - Number(newwe?.salePrice.substring(1))/Number(newwe?.retailPrice.substring(1)))*100).toFixed(2))
-        setOffPrice((Number(newwe?.retailPrice.substring(1)) - Number(newwe?.salePrice.substring(1))).toFixed(2))
-      } catch (err) {
-        console.log(err);
+    // Prefer finding the item locally using params.id. This avoids relying on a fragile global API state.
+    const findItem = () => {
+      const numericId = Number(params.id);
+      const found = items.find((it: any) => Number(it.id) === numericId);
+      if (found) {
+        setId(found);
+        setOffPercentage(((1 - Number(found.salePrice.substring(1)) / Number(found.retailPrice.substring(1))) * 100).toFixed(2));
+        setOffPrice((Number(found.retailPrice.substring(1)) - Number(found.salePrice.substring(1))).toFixed(2));
+      } else {
+        console.warn('Item not found locally for id', params.id);
       }
-    };
+      setIsLoading(false);
+    }
 
-    fetchData();
-  },);
+    findItem();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id]);
 
   const handleClick = async (db: any) => {
     try {
-      const response = await axios.post("../api/cart", db )
+      // ensure credentials are sent so backend can read token cookie
+      const response = await axios.post("../api/cart", db, { withCredentials: true })
       console.log(db + '  ' + response.data);
       router.push("/cartpage");
     } catch (error:any) {
       console.log("Process failed", error.message);
+      // if unauthorized, redirect to login
+      if (error.response?.status === 401) {
+        router.push('/login')
+      }
     } 
   }
   

@@ -42,19 +42,27 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Sign in to your account
-                    </h2>
-                </div>
+        <div className="min-h-screen w-full bg-cover bg-center" style={{ backgroundImage: "url('/war.jpg')" }}>
+            {/* dark overlay to improve contrast */}
+            <div className="min-h-screen w-full bg-black/50 flex items-center justify-center px-4 py-12">
+                <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    {/* Left panel - welcoming text; hidden on very small screens */}
+                    <div className="hidden md:flex flex-col items-start justify-center text-white px-6">
+                        <h1 className="text-4xl font-extrabold mb-4">Welcome back</h1>
+                        <p className="text-lg text-gray-100/90">Sign in to access your cart, checkout and manage your account.</p>
+                        <p className="mt-6 text-sm text-gray-200/80">Secure, fast and responsive — works across all devices.</p>
+                    </div>
+                    {/* Right panel - form */}
+                    <div className="w-full max-w-md mx-auto bg-white/95 dark:bg-white/90 rounded-xl shadow-xl p-6 md:p-8">
+                        <div>
+                            <h2 className="text-center text-2xl md:text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+                        </div>
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                         <span className="block sm:inline">{error}</span>
                     </div>
                 )}
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                        <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
                     <div className="space-y-4">
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -65,7 +73,7 @@ export default function LoginPage() {
                                 name="email"
                                 type="email"
                                 required
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="Enter your email"
                                 value={user.email}
                                 onChange={(e) => setUser({...user, email: e.target.value})}
@@ -80,7 +88,7 @@ export default function LoginPage() {
                                 name="password"
                                 type="password"
                                 required
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="Enter your password"
                                 value={user.password}
                                 onChange={(e) => setUser({...user, password: e.target.value})}
@@ -100,13 +108,15 @@ export default function LoginPage() {
                         </button>
                     </div>
                 </form>
-                <div className="text-sm text-center mt-4">
-                    <p className="text-gray-600">
-                        Don&apos;t have an account?{' '}
-                        <Link href="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
-                            Sign up here
-                        </Link>
-                    </p>
+                        <div className="text-sm text-center mt-4">
+                            <p className="text-gray-600">
+                                Don&apos;t have an account?{' '}
+                                <Link href="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                    Sign up here
+                                </Link>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -80,19 +80,21 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        var sortedData = userFromDatabase.idProduct.map((cardId: string, index: number) => {
-            const item = Data.find((item: any) => item.id === cardId);
-            const quantity = userFromDatabase.Quantity[index] || 0;
-            return { ...item, quantity };
-        });
+    // Build cart items and skip any items that are not found in Data
+    var sortedData = userFromDatabase.idProduct.map((cardId: string, index: number) => {
+      const item = Data.find((item: any) => Number(item.id) === Number(cardId));
+      if (!item) return null;
+      const quantity = Number(userFromDatabase.Quantity[index]) || 0;
+      return { ...item, quantity };
+    }).filter(Boolean);
 
         var salePriceTotal = 0;
         var retailPriceTotal = 0;
         
         for (let i = 0; i < sortedData.length; i++) {
-            const quantity = Number(sortedData[i]?.quantity) || 0;
-            const salePrice = Number(sortedData[i]?.salePrice?.substring(1)) || 0;
-            const retailPrice = Number(sortedData[i]?.retailPrice?.substring(1)) || 0;
+            const quantity = Number(sortedData[i].quantity) || 0;
+            const salePrice = Number((sortedData[i].salePrice || "").toString().substring(1)) || 0;
+            const retailPrice = Number((sortedData[i].retailPrice || "").toString().substring(1)) || 0;
             
             salePriceTotal += quantity * salePrice;
             retailPriceTotal += quantity * retailPrice;

@@ -2,43 +2,64 @@ import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/dbconfig/dbconfig";
 import User from "@/models/userModel";
 import jwt from "jsonwebtoken";
-let reqBody: any;
+
 connect();
 
-export async function POST(request: NextRequest){
-    try {
-        const token = request.cookies.get("token")?.value;
-    
-        if (!token) {
-            return NextResponse.json({ error: "Please login first" }, { status: 401 });
-        }
+export async function POST(request: NextRequest) {
+  try {
+    const token = request.cookies.get("token")?.value;
 
-        // Verify token and get user ID
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as { id: string };
-        reqBody = await request.json();
-        
-        let userInDatabase = await User.findById(decoded.id);
-        if (!userInDatabase) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
-        }
-      
-      let indexing: any;
-      userInDatabase.idProduct.forEach((element: any, index: any) => {
-        if (element == reqBody.plus) {
-          indexing = index;
-        }
-      })
+    if (!token) {
+      return NextResponse.json({ error: "Please login first" }, { status: 401 });
+    }
 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as { id: string };
+    const reqBody = await request.json();
+
+    if (!reqBody?.plus) {
+      return NextResponse.json({ error: "Item ID is required" }, { status: 400 });
+    }
+
+    const amount = Number(reqBody.amount ?? 1);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+    }
+
+    const userInDatabase = await User.findById(decoded.id);
+    if (!userInDatabase) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Ensure arrays exist
+    if (!Array.isArray(userInDatabase.idProduct)) userInDatabase.idProduct = [];
+    if (!Array.isArray(userInDatabase.Quantity)) userInDatabase.Quantity = [];
+
+    // Normalize comparison by stringifying IDs (Data ids may be numbers)
+    const plusIdStr = String(reqBody.plus);
+    const index = userInDatabase.idProduct.findIndex((el: any) => String(el) === plusIdStr);
+
+    if (index === -1) {
+      // item not in cart yet, push id and quantity = amount
       await User.findByIdAndUpdate(
         decoded.id,
-        { $set: { [`Quantity.${indexing}`]: +userInDatabase.Quantity[indexing] + 1 } }
+        { $push: { idProduct: plusIdStr, Quantity: amount } },
+        { new: true }
       );
 
-      return NextResponse.json({
-        message: "we subtracted Quantity",
-      });
-
-    } catch (error: any) {
-        return NextResponse.json({error: error.message}, {status: 500})
+      return NextResponse.json({ message: "Item added to cart", success: true });
     }
+
+    // item already in cart -> increment quantity by amount
+    const currentQty = Number(userInDatabase.Quantity[index] ?? 0);
+    await User.findByIdAndUpdate(
+      decoded.id,
+      { $set: { [`Quantity.${index}`]: currentQty + amount } },
+      { new: true }
+    );
+
+    return NextResponse.json({ message: "Item quantity increased", success: true });
+  } catch (error: any) {
+    console.error("cartPlus error:", error);
+    return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
+  }
 }
