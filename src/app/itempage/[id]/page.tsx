@@ -45,7 +45,17 @@ const ParticularItem = ({params}:any) => {
       const numericId = Number(params.id);
       const found = items.find((it: any) => Number(it.id) === numericId);
       if (found) {
-        setId(found);
+        setId({
+          id: found.id,
+          name: found.name || '',
+          image: found.image || '',
+          retailPrice: found.retailPrice || '',
+          salePrice: found.salePrice || '',
+          caliber: found.caliber || '',
+          capacity: found.capacity || '',
+          weight: found.weight || '',
+          specs: found.specs || ''
+        });
         setOffPercentage(((1 - Number(found.salePrice.substring(1)) / Number(found.retailPrice.substring(1))) * 100).toFixed(2));
         setOffPrice((Number(found.retailPrice.substring(1)) - Number(found.salePrice.substring(1))).toFixed(2));
       } else {
@@ -55,7 +65,7 @@ const ParticularItem = ({params}:any) => {
     }
 
     findItem();
-  }, [params.id]);
+  }, [params.id, items]);
 
   const handleClick = async (db: any) => {
     try {
