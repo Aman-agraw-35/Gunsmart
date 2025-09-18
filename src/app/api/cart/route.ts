@@ -8,14 +8,11 @@ connect();
 
 export async function POST(request: NextRequest) {
   try {
-    // Get the token from cookies
     const token = request.cookies.get("token")?.value;
     
     if (!token) {
       return NextResponse.json({ error: "Please login first" }, { status: 401 });
     }
-
-    // Verify token and get user ID
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as { id: string };
     reqBody = await request.json();
 
@@ -65,22 +62,18 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
     try {
-        // Get the token from cookies
         const token = request.cookies.get("token")?.value;
         
         if (!token) {
             return NextResponse.json({ error: "Please login first" }, { status: 401 });
         }
 
-        // Verify token and get user ID
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as { id: string };
         const userFromDatabase = await User.findById(decoded.id);
 
         if (!userFromDatabase) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
-
-    // Build cart items and skip any items that are not found in Data
     var sortedData = userFromDatabase.idProduct.map((cardId: string, index: number) => {
       const item = Data.find((item: any) => Number(item.id) === Number(cardId));
       if (!item) return null;

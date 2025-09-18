@@ -7,7 +7,6 @@ export async function GET() {
             success: true,
         });
         
-        // Remove the token cookie
         response.cookies.set("token", "", {
             httpOnly: true,
             expires: new Date(0)

@@ -10,7 +10,6 @@ export async function POST(request: NextRequest) {
         const reqBody = await request.json();
         const { username, email, password } = reqBody;
 
-        // Check if user already exists
         const existingUser = await User.findOne({ 
             $or: [{ email }, { username }]
         });
@@ -22,11 +21,9 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Hash password
         const salt = await bcryptjs.genSalt(10);
         const hashedPassword = await bcryptjs.hash(password, salt);
 
-        // Create new user
         const newUser = new User({
             username,
             email,

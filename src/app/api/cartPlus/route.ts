@@ -30,16 +30,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Ensure arrays exist
     if (!Array.isArray(userInDatabase.idProduct)) userInDatabase.idProduct = [];
     if (!Array.isArray(userInDatabase.Quantity)) userInDatabase.Quantity = [];
 
-    // Normalize comparison by stringifying IDs (Data ids may be numbers)
     const plusIdStr = String(reqBody.plus);
     const index = userInDatabase.idProduct.findIndex((el: any) => String(el) === plusIdStr);
 
     if (index === -1) {
-      // item not in cart yet, push id and quantity = amount
       await User.findByIdAndUpdate(
         decoded.id,
         { $push: { idProduct: plusIdStr, Quantity: amount } },
@@ -49,7 +46,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Item added to cart", success: true });
     }
 
-    // item already in cart -> increment quantity by amount
     const currentQty = Number(userInDatabase.Quantity[index] ?? 0);
     await User.findByIdAndUpdate(
       decoded.id,

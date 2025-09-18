@@ -17,7 +17,6 @@ const Header = () => {
   const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in
     const checkAuth = async () => {
       try {
         const res = await fetch('/api/auth/check', {
@@ -67,7 +66,6 @@ const Header = () => {
         
         <div className="flex items-center gap-4" aria-busy={authLoading}>
           {authLoading ? (
-            // skeleton placeholders to avoid flicker while auth is checked
             <div className="flex items-center md:gap-3 gap-2">
               <div className="w-20 h-8 rounded-md bg-white/30 animate-pulse sm:w-24 sm:h-9" aria-hidden="true" />
               <div className="w-20 h-8 rounded-md bg-white/30 animate-pulse sm:w-24 sm:h-9" aria-hidden="true" />

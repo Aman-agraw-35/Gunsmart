@@ -11,7 +11,6 @@ export async function POST(request: NextRequest) {
         const reqBody = await request.json();
         const { email, password } = reqBody;
 
-        // Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
             return NextResponse.json(
@@ -20,7 +19,6 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Check if password is correct
         const validPassword = await bcryptjs.compare(password, user.password);
         if (!validPassword) {
             return NextResponse.json(
@@ -29,14 +27,12 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Create token data
         const tokenData = {
             id: user._id,
             username: user.username,
             email: user.email
         };
 
-        // Create token
         const token = jwt.sign(tokenData, process.env.JWT_SECRET_KEY!, { expiresIn: "1d" });
 
         const response = NextResponse.json({
@@ -49,7 +45,6 @@ export async function POST(request: NextRequest) {
             }
         });
 
-        // Set token in cookie
         response.cookies.set("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",

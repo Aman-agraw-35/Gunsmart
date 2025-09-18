@@ -16,7 +16,6 @@ import { useRouter } from 'next/navigation';
   const [retailTotal ,setRetailTotal] = useState("0")
   const [dataFromCart, setDataFromCart] = useState<any[]>([])
   const [itemLoading, setItemLoading] = useState<Record<string, boolean>>({})
-  // pending deltas per item to debounce rapid clicks (positive for plus, negative for minus)
   const [pendingDeltas, setPendingDeltas] = useState<Record<string, number>>({})
   const timersRef = React.useRef<Record<string, NodeJS.Timeout | number | null>>({})
   const router = useRouter();
@@ -26,7 +25,6 @@ import { useRouter } from 'next/navigation';
       try {
         const res = await axios.get('../api/cart', { withCredentials: true })
         if (res.data?.error) {
-          // handle not logged in
           console.warn('cart fetch error', res.data.error)
           setIsLoading(false)
           setDataFromCart([])
@@ -69,15 +67,11 @@ import { useRouter } from 'next/navigation';
 
   const handlePlusClick = (db: any) => {
     if (!db) return
-    // increment pending delta for this item
     setPendingDeltas(prev => ({ ...prev, [db]: (prev[db] || 0) + 1 }))
-    // clear existing timer
     const existing = timersRef.current[db]
     if (existing) clearTimeout(existing as any)
-    // start new debounce timer (500ms)
     timersRef.current[db] = setTimeout(() => {
       const amount = pendingDeltas[db] ?? 0
-      // read latest pending from state (may be stale in closure) - fetch then clear
       setPendingDeltas((latest) => {
         const finalAmount = latest[db] ?? 0
         if (finalAmount !== 0) sendPlusRequest(db, finalAmount)

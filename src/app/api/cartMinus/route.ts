@@ -13,7 +13,6 @@ export async function POST(request: NextRequest){
             return NextResponse.json({ error: "Please login first" }, { status: 401 });
         }
 
-        // Verify token and get user ID
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as { id: string };
         const reqBody = await request.json();
 
@@ -25,7 +24,6 @@ export async function POST(request: NextRequest){
         if (!Array.isArray(userInDatabase.idProduct)) userInDatabase.idProduct = [];
         if (!Array.isArray(userInDatabase.Quantity)) userInDatabase.Quantity = [];
 
-        // Handle minus operation
         if (reqBody.minus) {
           const minusIdStr = String(reqBody.minus);
           const amount = Number(reqBody.amount ?? 1);
@@ -40,7 +38,6 @@ export async function POST(request: NextRequest){
 
           const currentQty = Number(userInDatabase.Quantity[index] ?? 0);
           if (currentQty <= amount) {
-            // remove item
             await User.findByIdAndUpdate(
               decoded.id,
               { $pull: { idProduct: minusIdStr, Quantity: { $in: [userInDatabase.Quantity[index]] } } },
@@ -49,7 +46,6 @@ export async function POST(request: NextRequest){
             return NextResponse.json({ message: "Item removed from cart", success: true });
           }
 
-          // decrement by amount
           await User.findByIdAndUpdate(
             decoded.id,
             { $set: { [`Quantity.${index}`]: currentQty - amount } },
@@ -59,7 +55,6 @@ export async function POST(request: NextRequest){
           return NextResponse.json({ message: "Item quantity decreased", success: true });
         }
 
-        // Handle remove operation
         if (reqBody.remove) {
           const removeIdStr = String(reqBody.remove);
           const index = userInDatabase.idProduct.findIndex((el: any) => String(el) === removeIdStr);

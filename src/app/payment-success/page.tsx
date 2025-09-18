@@ -11,18 +11,16 @@ export default function PaymentSuccess({
 }) {
   const router = useRouter();
 
-  // Clear cart when payment success page loads
   useEffect(() => {
     const clearCart = async () => {
       try {
-        // Clear the cart (both idProduct and Quantity arrays)
         const clearCartResponse = await fetch('/api/cart/clear', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           credentials: 'include',
-          cache: 'no-store'  // Ensure we don't use cached response
+          cache: 'no-store'
         });
 
         if (!clearCartResponse.ok) {
@@ -40,7 +38,6 @@ export default function PaymentSuccess({
       }
     };
 
-    // Call clearCart immediately when component mounts
     clearCart();
   }, []);
 

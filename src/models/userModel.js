@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-// Add indexes for faster lookups
 userSchema.index({ username: 1 });
 userSchema.index({ email: 1 });
 

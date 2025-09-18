@@ -30,7 +30,7 @@ export default function LoginPage() {
 
             if (data.success) {
                 router.push("/");
-                router.refresh(); // Refresh to update navbar state
+                router.refresh();
             } else {
                 setError(data.error || "Invalid credentials");
             }
@@ -46,7 +46,6 @@ export default function LoginPage() {
             {/* dark overlay to improve contrast */}
             <div className="auth-overlay">
                 <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    {/* Left panel - welcoming text; hidden on very small screens */}
                     <div className="hidden md:flex flex-col items-start justify-center text-white px-6">
                         <h1 className="text-4xl font-extrabold mb-4">Welcome back</h1>
                         <p className="text-lg text-gray-100/90">Sign in to access your cart, checkout and manage your account.</p>

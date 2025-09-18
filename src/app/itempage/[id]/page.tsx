@@ -41,7 +41,6 @@ const ParticularItem = ({params}:any) => {
   const router = useRouter();
 
   useEffect(() => {
-    // Prefer finding the item locally using params.id. This avoids relying on a fragile global API state.
     const findItem = () => {
       const numericId = Number(params.id);
       const found = items.find((it: any) => Number(it.id) === numericId);
@@ -56,18 +55,15 @@ const ParticularItem = ({params}:any) => {
     }
 
     findItem();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
   const handleClick = async (db: any) => {
     try {
-      // ensure credentials are sent so backend can read token cookie
       const response = await axios.post("../api/cart", db, { withCredentials: true })
       console.log(db + '  ' + response.data);
       router.push("/cartpage");
     } catch (error:any) {
       console.log("Process failed", error.message);
-      // if unauthorized, redirect to login
       if (error.response?.status === 401) {
         router.push('/login')
       }

@@ -46,7 +46,6 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
     const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
     const baseUrl = isLocalhost ? 'http://localhost:3000' : 'https://gunmart.vercel.app';
 
-    // First attempt to confirm the payment
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       clientSecret,
