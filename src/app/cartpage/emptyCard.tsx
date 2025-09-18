@@ -5,7 +5,7 @@ const EmptyCard = () => {
   return (
     <>
     <Header />
-    <div className="bg-[#e4e4e4] h-[100vh] w-full pt-20"> 
+    <div className="cart-page h-[100vh] w-full pt-20"> 
     <div className="lg:w-[70%] md:w-[90%] w-[95%] lg:pl-36 md:px-10 px-4 pt-8 mr-4 ">
       <div className="h-44 bg-white p-6  ">
         <h1 className="md:text-3xl bg-white text-2xl text-[#287480] font-semibold border-b-[1px] border-black pb- ">Your Guns-Mart Cart is empty.</h1>

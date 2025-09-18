@@ -42,9 +42,9 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen w-full bg-cover bg-center" style={{ backgroundImage: "url('/war.jpg')" }}>
+        <div className="auth-page">
             {/* dark overlay to improve contrast */}
-            <div className="min-h-screen w-full bg-black/50 flex items-center justify-center px-4 py-12">
+            <div className="auth-overlay">
                 <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                     {/* Left panel - welcoming text; hidden on very small screens */}
                     <div className="hidden md:flex flex-col items-start justify-center text-white px-6">

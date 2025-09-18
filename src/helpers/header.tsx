@@ -14,6 +14,7 @@ const Header = () => {
   const router = useRouter();
   const [isProfileCardVisible, setProfileCardVisible] = useState(false);
   const [user, setUser] = useState<{ username: string; email: string } | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
     // Check if user is logged in
@@ -26,9 +27,14 @@ const Header = () => {
         const data = await res.json();
         if (data.user) {
           setUser(data.user);
+        } else {
+          setUser(null);
         }
       } catch (err) {
         console.error(err);
+        setUser(null);
+      } finally {
+        setAuthLoading(false);
       }
     };
     checkAuth();
@@ -59,16 +65,22 @@ const Header = () => {
           <h1 className="bg-black text-4xl sm:text-5xl pt-1 h-full float-left w-max cursor-pointer">Guns-Mart</h1>
         </Link>
         
-        <div className="flex items-center gap-4">
-          {!user ? (
+        <div className="flex items-center gap-4" aria-busy={authLoading}>
+          {authLoading ? (
+            // skeleton placeholders to avoid flicker while auth is checked
+            <div className="flex items-center gap-3">
+              <div className="w-20 h-8 rounded-md bg-white/30 animate-pulse sm:w-24 sm:h-9" aria-hidden="true" />
+              <div className="w-20 h-8 rounded-md bg-white/30 animate-pulse sm:w-24 sm:h-9" aria-hidden="true" />
+            </div>
+          ) : !user ? (
             <>
               <Link href="/login">
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded text-sm sm:text-base">
                   Login
                 </button>
               </Link>
               <Link href="/signup">
-                <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded text-sm sm:text-base">
                   Sign Up
                 </button>
               </Link>

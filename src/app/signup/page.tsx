@@ -53,17 +53,17 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="min-h-screen w-full bg-cover bg-center" style={{ backgroundImage: "url('/war.jpg')" }}>
-            <div className="min-h-screen w-full bg-black/50 flex items-center justify-center px-4 py-12">
+        <div className="auth-page">
+            <div className="auth-overlay">
                 <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                     {/* Left intro panel */}
-                    <div className="hidden md:flex flex-col items-start justify-center text-white px-6">
-                        <h1 className="text-4xl font-extrabold mb-4">Join Gunsmart</h1>
-                        <p className="text-lg text-gray-100/90">Create an account to save your cart, checkout faster and manage orders.</p>
-                        <p className="mt-6 text-sm text-gray-200/80">Secure passwords, responsive UI and a smooth checkout experience.</p>
+                    <div className="hidden md:flex flex-col bg-transparent items-start justify-center text-white px-6">
+                        <h1 className="text-4xl font-extrabold bg-transparent mb-4">Join Gunsmart</h1>
+                        <p className="text-lg bg-transparent  text-gray-100/90">Create an account to save your cart, checkout faster and manage orders.</p>
+                        <p className="mt-6 bg-transparent  text-sm text-gray-200/80">Secure passwords, responsive UI and a smooth checkout experience.</p>
                     </div>
                     {/* Form panel */}
-                    <div className="w-full max-w-md mx-auto bg-white/95 rounded-xl shadow-xl p-6 md:p-8">
+                    <div className="w-full  max-w-md mx-auto bg-white/95 rounded-xl shadow-xl p-6 md:p-8">
                         <div>
                             <h2 className="text-center text-2xl md:text-3xl font-extrabold text-gray-900">Create your account</h2>
                         </div>
