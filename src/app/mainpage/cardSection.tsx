@@ -20,7 +20,7 @@ export const CardSection:any = () => {
      
   return (
     <div className="h-auto bg-black w-full flex md:py-32 py-0 xl:px-32 px-4 gap-6 justify-center flex-wrap ">
-      {Data?.slice(0,6).map((x) => (
+      {Data?.map((x) => (
         <div key={x.id} onClick={() => handleClick(x.id)} className="w-[400px] h-[393px]
         hover:cursor-pointer bg-white border-white border-[1px] 
         mb-4 ">
@@ -30,7 +30,7 @@ export const CardSection:any = () => {
             alt ={x.name}
             width={350}
             height={280}
-            className="w-[350px] h-[299px] object-fill bg-center  bg-white "        />
+            className="w-[350px] h-[299px] object-contain bg-center  bg-white "        />
           <div className="flex  bg-white  flex-row">
           <h1 
           className='text-2xl bg-black pl-4 p-2 text-[#b5865d] font-bold '>
