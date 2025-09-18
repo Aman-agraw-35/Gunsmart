@@ -43,24 +43,30 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       return;
     }
 
-   const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+    const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+    const baseUrl = isLocalhost ? 'http://localhost:3000' : 'https://gunmart.vercel.app';
 
-const returnUrl = `${
-  isLocalhost
-    ? 'http://localhost:3000'
-    : 'https://gunmart.vercel.app'
-}/payment-success?amount=${amount}`;
-
-const { error } = await stripe.confirmPayment({
-  elements,
-  clientSecret,
-  confirmParams: {
-    return_url: returnUrl,
-  },
-});
+    // First attempt to confirm the payment
+    const { error, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      clientSecret,
+      redirect: 'if_required',
+      confirmParams: {
+        return_url: `${baseUrl}/payment-success?amount=${amount}`,
+      },
+    });
 
     if (error) {
       setErrorMessage(error.message);
+      setLoading(false);
+      window.location.href = `${baseUrl}/payment-failed`;
+      return;
+    }
+
+    if (paymentIntent && paymentIntent.status === 'succeeded') {
+      window.location.href = `${baseUrl}/payment-success?amount=${amount}`;
+    } else {
+      window.location.href = `${baseUrl}/payment-failed`;
     }
 
     setLoading(false);
@@ -68,30 +74,46 @@ const { error } = await stripe.confirmPayment({
 
   if (!clientSecret || !stripe || !elements) {
     return (
-      <div className="flex items-center bg-black justify-center ">
+      <div className="flex items-center justify-center min-h-[400px] bg-[#1a1a1a]">
         <div
-          className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current  border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+          className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-[#b5865d] border-t-transparent"
           role="status"
         >
-          <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-            Loading...
-          </span>
+          <span className="sr-only">Loading payment form...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-2 rounded-md">
-      {clientSecret && <PaymentElement />}
+    <form onSubmit={handleSubmit} className="bg-[#1a1a1a] p-6 rounded-lg border border-[#b5865d]/20">
+      <div className="mb-6">
+        {clientSecret && <PaymentElement options={{
+          layout: { type: 'tabs', defaultCollapsed: false },
+          defaultValues: {
+            billingDetails: {
+              name: '',
+              email: '',
+              phone: '',
+            }
+          },
+          business: {
+            name: 'Gunsmart'
+          }
+        }} />}
+      </div>
 
-      {errorMessage && <div>{errorMessage}</div>}
+      {errorMessage && (
+        <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+          {errorMessage}
+        </div>
+      )}
 
       <button
         disabled={!stripe || loading}
-        className="text-white w-full p-5 bg-black mt-2 rounded-md font-bold disabled:opacity-50 disabled:animate-pulse"
+        className="w-full py-4 px-6 bg-[#b5865d] hover:bg-[#96724d] text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:hover:bg-[#b5865d]"
       >
-        {!loading ? `Pay $${amount}` : "Processing..."}
+        {!loading ? `Pay $${amount}` : "Processing Payment..."}
       </button>
     </form>
   );
