@@ -28,26 +28,32 @@ export const CardSection: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="h-auto bg-black w-full flex md:py-32 py-0 xl:px-32 px-4 gap-6 justify-center flex-wrap">
+      <div className="w-full flex flex-wrap justify-center gap-6 bg-black md:py-32 py-8 xl:px-32 px-4">
         {currentItems.map((x) => (
           <div
             key={x.id}
             onClick={() => handleClick(x.id)}
-            className="w-[400px] h-[393px] hover:cursor-pointer bg-white border-white border-[1px] mb-4"
+            className="bg-white border border-white rounded-lg overflow-hidden 
+                       hover:cursor-pointer transition-transform duration-200 hover:scale-105
+                       w-[90%] sm:w-[280px] md:w-[320px] lg:w-[360px] xl:w-[400px]"
           >
-            <h1 className="text-lg bg-black p-2">{x.name}</h1>
-            <Image
-              src={x.image}
-              alt={x.name}
-              width={350}
-              height={280}
-              className="w-[350px] h-[299px] object-contain bg-center bg-white"
-            />
-            <div className="flex bg-white flex-row">
-              <h1 className="text-2xl bg-black pl-4 p-2 text-[#b5865d] font-bold">
+            <h1 className="text-base md:text-lg bg-black text-white p-2 truncate">{x.name}</h1>
+
+            <div className="bg-white flex justify-center items-center">
+              <Image
+                src={x.image}
+                alt={x.name}
+                width={400}
+                height={300}
+                className="w-full aspect-[4/3] object-contain bg-center"
+              />
+            </div>
+
+            <div className="flex items-center justify-start bg-black p-2 space-x-2">
+              <h1 className="text-xl md:text-2xl text-[#b5865d] font-bold">
                 {x.salePrice}
               </h1>
-              <h1 className="text-lg text-center pt-3 bg-black pl-2 p-2 pr-2 text-[#b5865d] font-bold line-through">
+              <h1 className="text-sm md:text-lg text-[#b5865d] font-bold line-through">
                 {x.retailPrice}
               </h1>
             </div>
@@ -55,16 +61,16 @@ export const CardSection: React.FC = () => {
         ))}
       </div>
 
+      {/* Pagination */}
       <div className="flex flex-wrap gap-3 justify-center mt-8 mb-12">
         <button
           disabled={currentPage === 1}
           onClick={() => setCurrentPage(currentPage - 1)}
-          className={`px-5 py-2 rounded-lg font-semibold transition-colors duration-200
-      ${
-        currentPage === 1
-          ? "bg-gray-600 cursor-not-allowed"
-          : "bg-[#b5865d] hover:bg-[#d2aa7a] text-black"
-      }`}
+          className={`px-5 py-2 rounded-lg font-semibold transition-colors duration-200 ${
+            currentPage === 1
+              ? "bg-gray-600 cursor-not-allowed text-white"
+              : "bg-[#b5865d] hover:bg-[#d2aa7a] text-black"
+          }`}
         >
           Previous
         </button>
@@ -73,12 +79,11 @@ export const CardSection: React.FC = () => {
           <button
             key={page}
             onClick={() => setCurrentPage(page)}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200
-        ${
-          currentPage === page
-            ? "bg-[#d2aa7a] text-black"
-            : "bg-gray-700 text-white hover:bg-gray-600"
-        }`}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
+              currentPage === page
+                ? "bg-[#d2aa7a] text-black"
+                : "bg-gray-700 text-white hover:bg-gray-600"
+            }`}
           >
             {page}
           </button>
@@ -87,12 +92,11 @@ export const CardSection: React.FC = () => {
         <button
           disabled={currentPage === totalPages}
           onClick={() => setCurrentPage(currentPage + 1)}
-          className={`px-5 py-2 rounded-lg font-semibold transition-colors duration-200
-      ${
-        currentPage === totalPages
-          ? "bg-gray-600 cursor-not-allowed"
-          : "bg-[#b5865d] hover:bg-[#d2aa7a] text-black"
-      }`}
+          className={`px-5 py-2 rounded-lg font-semibold transition-colors duration-200 ${
+            currentPage === totalPages
+              ? "bg-gray-600 cursor-not-allowed text-white"
+              : "bg-[#b5865d] hover:bg-[#d2aa7a] text-black"
+          }`}
         >
           Next
         </button>
