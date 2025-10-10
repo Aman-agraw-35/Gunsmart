@@ -61,7 +61,7 @@ const Header = () => {
     <div className="fixed top-0 w-full bg-black border-b-2 justify-center flex items-center border-white z-50 h-20">
       <div className="flex justify-between h-10 bg-black w-[90%] items-center">
         <Link href="/" className={roboto.className}>
-          <h1 className="bg-black text-3xl  md:text-5xl pt-1 h-full float-left w-max cursor-pointer">Guns-Mart</h1>
+          <h1 className="bg-black text-xl sm:text-3xl  md:text-5xl pt-1 h-full float-left w-max cursor-pointer">Guns-Mart</h1>
         </Link>
         
         <div className="flex items-center gap-4" aria-busy={authLoading}>
@@ -73,12 +73,12 @@ const Header = () => {
           ) : !user ? (
             <div className="flex items-center gap-2 sm:gap-3">
               <Link href="/login">
-                <button className="bg-[#b5865d] hover:bg-[#96724d] text-white px-4 py-1.5 sm:px-5 sm:py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base font-medium border border-[#b5865d] hover:border-[#96724d]">
+                <button className="bg-[#b5865d] hover:bg-[#96724d] ml-2 text-white px-1 py-1 sm:px-5 sm:py-2 rounded-lg transition-colors duration-200 text-xs sm:text-base font-medium border border-[#b5865d] hover:border-[#96724d]">
                   Login
                 </button>
               </Link>
               <Link href="/signup">
-                <button className="bg-transparent text-[#b5865d] hover:text-white hover:bg-[#b5865d] px-4 py-1.5 sm:px-5 sm:py-2 rounded-lg transition-colors duration-200 text-sm sm:text-base font-medium border border-[#b5865d]">
+                <button className="bg-transparent text-[#b5865d] hover:text-white hover:bg-[#b5865d] text-xs px-1 py-1 sm:px-5 sm:py-2 rounded-lg transition-colors duration-200  sm:text-base sm:font-medium border border-[#b5865d]">
                   Sign Up
                 </button>
               </Link>

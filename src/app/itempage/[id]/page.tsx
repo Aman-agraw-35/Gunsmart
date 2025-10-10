@@ -87,58 +87,70 @@ const ParticularItem = ({params}:any) => {
   return (
     <div className='h-full w-full item-page'>
       <Header/>
-      <div className="flex md:flex-row flex-col md:h-[648px] h-min items-center xl:mx-[280px] lg:mx-24 sm:mx-16 mx-4 pt-36 pb-24">
-        <div className="md:w-[50%] w-[90%] md:h-full bg-[#ffffff] image">
+      {/* MAIN ROW/STACK */}
+      <div className="flex md:flex-row flex-col md:h-[648px] h-auto items-center xl:mx-[280px] lg:mx-24 sm:mx-16 mx-4 pt-24 sm:pt-36 pb-16 sm:pb-24 gap-6">
+        {/* IMAGE */}
+        <div className=" w-full md:h-full h-56 bg-[#ffffff] image flex justify-center items-center">
           <Image 
             src={id.image} 
             alt={id.name}
             width={460}
             height={460}
-            className='object-contain md:h-full w-full bg-[#ffffff] ima'
+            className='object-contain w-[85%] sm:w-full h-full ima'
           />
         </div>
-        <div className="md:w-[50%] w-[90%] h-full mt-8 md:mt-0 md:ml-6  ">
+
+        {/* DETAILS */}
+        <div className="md:w-[50%] w-full h-auto mt-6 md:mt-0 md:ml-6 px-2 sm:px-0">
           <div className={inter.className}>
-            <h1 className="text-4xl sm:text-5xl font-bold text-black  ">{id.name}</h1>
+            <h1 className="text-2xl sm:text-5xl font-bold text-black leading-tight break-words">{id.name}</h1>
           </div>
-          <div className="flex ">
-            <h1 className="text-3xl pt-6 font-bold text-[#b5865d] ">{id.salePrice}</h1>
-            <h1 className="text-xl pt-7 pl-2 font-semibold line-through font-sans text-[#b5865d] ">{id.retailPrice}</h1>
-            <h1 className="text-lg pt-7 pl-3 font-bold text-[#388e3c] ">{offPercentage}%&nbsp;off</h1>
+
+          <div className="flex flex-col sm:flex-row sm:items-baseline  gap-2 mt-3">
+            <h1 className="text-xl sm:text-3xl font-bold text-[#b5865d]">{id.salePrice}</h1>
+
+            <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
+              <h1 className="text-sm sm:text-xl font-semibold line-through font-sans text-[#b5865d]">{id.retailPrice}</h1>
+              <h1 className="text-sm sm:text-lg font-bold text-[#388e3c]">{offPercentage}%&nbsp;off</h1>
+            </div>
           </div>
-          <label className="font-bold m text-[#388e3c] " htmlFor="h1">Special Sale Price</label>
-          <br/>
-          <h1 className="text-2xl pt-4 font-semibold text-[#388e3c] ">Save ${offPrice} in this order if you order now. </h1>
+
+          <label className="font-bold text-sm sm:text-base text-[#388e3c] mt-3 block">Special Sale Price</label>
+          <p className="text-base sm:text-2xl pt-2 font-semibold text-[#388e3c]">Save ${offPrice} in this order if you order now.</p>
+
           <button 
             onClick={() => handleClick(id.id)} 
-            className="btn btn-warning mt-4 w-48 rounded-md text-white text-xl "
+            className="btn btn-warning mt-4 w-40 sm:w-48 rounded-md text-white text-lg sm:text-xl mx-auto sm:mx-0"
           >
             ADD TO CART
           </button>
         </div>
       </div>
-      <div className="h-max xl:mx-[280px] lg:mx-24 mx-12 sm:mx-16 ">
-        <h1 className="text-3xl w-full h-min pb-3 font-bold text-[#b5865d] border-b-2 border-black">SPECIFICATIONS</h1>
+
+    
+      <div className="h-max xl:mx-[280px] lg:mx-24 mx-6 sm:mx-16 mt-8">
+        <h1 className="text-2xl sm:text-3xl w-full h-min pb-3 font-bold text-[#b5865d] border-b-2 border-black">SPECIFICATIONS</h1>
         <br />
-        <table className="table text-black font-semibold ">
+        <table className="table-auto w-full text-black font-semibold text-sm sm:text-base">
           <tbody>
-            <tr >
-              <td>Caliber</td>
-              <td>{id.caliber}</td>
+            <tr>
+              <td className="py-2 w-[40%]">Caliber</td>
+              <td className="py-2">{id.caliber}</td>
             </tr>
             <tr>
-              <td>Capacity</td>
-              <td>{id.capacity}</td>
+              <td className="py-2">Capacity</td>
+              <td className="py-2">{id.capacity}</td>
             </tr>
             <tr className='border-b-2 border-black'>      
-              <td>Weight</td>
-              <td>{id.weight}</td>
+              <td className="py-2">Weight</td>
+              <td className="py-2">{id.weight}</td>
             </tr>
           </tbody>
         </table>
-        <div className="h-max w-full mt-16">
-          <h1 className="text-3xl w-full h-min pb-3 font-bold text-[#b5865d] border-b-2 border-black">DESCRIPTION</h1>
-          <h1 className="py-8 border-b-2 border-black text-black text-lg ">{id.specs}</h1>
+
+        <div className="h-max w-full mt-8">
+          <h1 className="text-2xl sm:text-3xl w-full h-min pb-3 font-bold text-[#b5865d] border-b-2 border-black">DESCRIPTION</h1>
+          <p className="py-6 border-b-2 border-black text-black text-sm sm:text-lg leading-relaxed">{id.specs}</p>
           <br/>
         </div>
       </div>

@@ -114,6 +114,8 @@ import { useRouter } from 'next/navigation';
         return copy
       })
       timersRef.current[db] = null
+
+
     }, 500)
   }
   const handleRemoveClick = async (d: any) => {
@@ -150,7 +152,7 @@ import { useRouter } from 'next/navigation';
       <div className="cart-page w-full  min-h-screen pt-20 flex xl:px-32 lg:px-6 lg:items-start items-center lg:flex-row flex-col-reverse"> 
         <div className="md:w-[70%] w-[90%] ml-4 py-8 mr-4 ">
           <div className="h-44 bg-white p-6 border-b-[0.001px] border-[#8f8f8f] ">
-            <h1 className="text-4xl bg-white text-[#287480] font-semibold border-b-[1px] border-black pb-5 ">Shopping Cart</h1>
+            <h1 className="sm:text-4xl text-2xl sm:mt-4 bg-white text-[#287480] font-semibold border-b-[1px] border-black pb-5 ">Shopping Cart</h1>
             <h1 className="text-xl bg-white pt-2 text-black float-right  ">{dataFromCart.length}&nbsp;{dataFromCart.length == 1 ? "Item":"Items"}</h1>
           </div>
           {dataFromCart?.filter(Boolean).map((cartItem:any, idx:number) => (
@@ -168,10 +170,10 @@ import { useRouter } from 'next/navigation';
             )}
             </div>
             <div className="md:w-[80%] w-[70%] bg-white h-full md:py-4  md:px-4 pr-2 pl-4 text-black ">
-            <h1 className="text-lg bg-white font-semibold pb-4">{cartItem.name}</h1>
+            <h1 className="sm:text-lg bg-white font-semibold pb-4">{cartItem.name}</h1>
             <div className="flex bg-white">
-            <h1 className="text-lg pr-4 bg-white font-bold pb-2">{cartItem.salePrice}</h1>
-            <h1 className="text-sm pt-1 bg-white font-medium line-through text-[#8f8f8f] pb-2">{cartItem.retailPrice}</h1>
+            <h1 className="sm:text-lg text-md pr-2 sm:pr-4 bg-white font-bold pb-2">{cartItem.salePrice}</h1>
+            <h1 className="text-sm pt-[0.15rem] bg-white font-medium line-through text-[#8f8f8f] pb-2">{cartItem.retailPrice}</h1>
             </div>
             <div className="flex bg-white">
             {<button 
@@ -181,11 +183,11 @@ import { useRouter } from 'next/navigation';
             <h1 className="text-md bg-white font-bold  border-[0.1px] px-2 border-[#8f8f8f] ">{cartItem.quantity}</h1>
             <button
             onClick={() =>{handlePlusClick(cartItem.id)}}  
-            className="btn-ghost bg-white btn-xs  pl-4 "><FontAwesomeIcon className="bg-white" icon={faPlus} />
+            className="btn-ghost bg-white btn-xs  pl-2 "><FontAwesomeIcon className="bg-white" icon={faPlus} />
             </button>
             <h1 
             onClick={() =>{handleRemoveClick(cartItem.id)}}  
-            className="text-md px-4 bg-white text-[#9f9f9f] cursor-pointer hover:text-[#6f6f6f] font-semibold ">Remove</h1>
+            className="sm:text-md text-sm sm:px-4 bg-white text-[#9f9f9f] cursor-pointer hover:text-[#6f6f6f] font-semibold ">Remove</h1>
             </div>
             </div>
           </div>))}

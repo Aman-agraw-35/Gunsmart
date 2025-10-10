@@ -31,20 +31,20 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#1a1a1a] flex flex-col items-center justify-center px-4 py-12">
-      <div className="w-full max-w-2xl bg-black border border-[#b5865d]/30 rounded-xl p-8 shadow-2xl">
-        <div className="mb-10 text-center bg-transparent">
-          <h1 className="text-4xl font-bold mb-4 text-white bg-transparent tracking-tight">
+    <div className="min-h-screen w-full bg-[#1a1a1a] flex flex-col items-center justify-center px-4 py-8 sm:py-12">
+      <div className="checkout-wrapper w-full max-w-2xl bg-black border border-[#b5865d]/30 rounded-xl p-4 sm:p-8 shadow-2xl">
+        <div className="mb-6 sm:mb-10 text-center bg-transparent">
+          <h1 className="text-2xl sm:text-4xl font-bold mb-2 sm:mb-4 text-white bg-transparent tracking-tight">
             Complete Your Purchase
           </h1>
-          <h2 className="text-xl text-gray-400 bg-transparent font-medium">
+          <h2 className="text-sm sm:text-xl text-gray-400 bg-transparent font-medium">
             Total Amount:
-            <span className="font-bold bg-transparent text-[#b5865d] ml-2">
+            <span className="amount-display inline-block font-bold bg-transparent text-[#b5865d] ml-2 text-lg sm:text-2xl">
               ${amount}
             </span>
           </h2>
         </div>
-        
+
         <Elements
           stripe={stripePromise}
           options={{
